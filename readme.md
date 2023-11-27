@@ -58,6 +58,3 @@ Replaces a line in a file
 ### update_init
 
 Used by `@add_thread`, appends the passed function to the init of a class.
-
-
-

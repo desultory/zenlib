@@ -1,5 +1,5 @@
 __author__ = "desultory"
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 
 from zenlib.logging import ColorLognameFormatter
 
@@ -56,9 +56,9 @@ def loggify(cls):
                 raise ValueError("The logger is not defined")
 
             if isinstance(value, list) or isinstance(value, dict) or isinstance(value, str) and "\n" in value:
-                self.logger.log(5, "Setattr '%s' to:\n%s" % (name, value))
+                self.logger.log(5, "Setattr '%s' to:\n%s" % (name, getattr(self, name)))
             else:
-                self.logger.log(5, "Setattr '%s' to: %s" % (name, value))
+                self.logger.log(5, "Setattr '%s' to: %s" % (name, getattr(self, name)))
 
         def __setitem__(self, name, value):
             """

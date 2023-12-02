@@ -1,7 +1,7 @@
 __author__ = "desultory"
-__version__ = "1.0.0"
+__version__ = "1.0.1"
 
-from collections.abc import KeysView
+from collections.abc import KeysView, ValuesView
 
 
 def handle_plural(function):
@@ -21,6 +21,10 @@ def handle_plural(function):
             self.logger.debug("Expanding list: %s" % focus_arg)
             for item in focus_arg:
                 function(self, *(other_args + (item,)))
+        elif isinstance(focus_arg, ValuesView):
+            self.logger.debug("Expanding dict values: %s" % focus_arg)
+            for value in focus_arg:
+                function(self, *(other_args + (value,)))
         elif isinstance(focus_arg, KeysView):
             self.logger.debug("Expanding dict keys: %s" % focus_arg)
             for key in focus_arg:

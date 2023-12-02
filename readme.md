@@ -7,7 +7,11 @@ Personal functions, classes, and decorators used in some of my projects
 
 ### @loggify
 
-This decorator can be added to any class to initialize it with a logger, and add extra logging functionality to that class
+This decorator can be added to any class to initialize it with a logger, and add extra logging functionality to that class.
+
+`_log_init` can be passed to loggified classes, to enable or disable additional initialization logging.
+
+Functions which do not begin with a `_` will create a debug line when executed, all functions but builtins will create a level 5 log line with the args, name, and result.
 
 ### ColorLognameFormatter
 

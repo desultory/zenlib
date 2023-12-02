@@ -1,5 +1,5 @@
 __author__ = "desultory"
-__version__ = "1.0.2"
+__version__ = "1.1.0"
 
 from zenlib.logging import ColorLognameFormatter
 
@@ -46,6 +46,24 @@ def loggify(cls):
                 self.logger.log(5, "Init debug logging disabled for: %s" % cls.__name__)
 
             super().__init__(*args, **kwargs)
+
+        def __getattribute__(self, name):
+            """
+            Override for function use logging.
+            Does not log functions starting with _ to debug level
+            """
+            attr = super().__getattribute__(name)
+            if callable(attr) and not name.startswith('__'):
+                def wrapper(*args, **kwargs):
+                    if not name.startswith('_'):
+                        self.logger.debug("Calling function: %s" % name)
+                    self.logger.log(5, "[%s] Calling function with args: %s, kwargs: %s" % (name, args, kwargs))
+                    result = attr(*args, **kwargs)
+                    self.logger.log(5, "[%s] Finished with result: %s" % (name, result))
+                    return result
+                return wrapper
+            else:
+                return attr
 
         def __setattr__(self, name, value):
             # First set the attribute using the parent class

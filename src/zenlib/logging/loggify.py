@@ -1,5 +1,5 @@
 __author__ = "desultory"
-__version__ = "1.0.1"
+__version__ = "1.0.2"
 
 from zenlib.logging import ColorLognameFormatter
 
@@ -31,7 +31,7 @@ def loggify(cls):
                 self.logger.addHandler(color_stream_handler)
                 self.logger.info("Adding default handler: %s" % self.logger)
 
-            if kwargs.get('_log_init', True) is True:
+            if kwargs.pop('_log_init', True) is True:
                 self.logger.info("Intializing class: %s" % cls.__name__)
 
                 if args:

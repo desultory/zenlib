@@ -1,5 +1,5 @@
 __author__ = "desultory"
-__version__ = "1.1.0"
+__version__ = "1.2.0"
 
 from zenlib.logging import ColorLognameFormatter
 
@@ -15,7 +15,7 @@ def loggify(cls):
         def __init__(self, *args, **kwargs):
             parent_logger = kwargs.pop('logger') if isinstance(kwargs.get('logger'), Logger) else getLogger()
             self.logger = parent_logger.getChild(self.__class__.__name__)
-            self.logger.setLevel(self.logger.parent.level)
+            self.logger.setLevel(self.logger.parent.level + kwargs.pop('_log_bump', 0))
 
             def has_handler(logger):
                 parent = logger
@@ -33,6 +33,7 @@ def loggify(cls):
 
             if kwargs.pop('_log_init', True) is True:
                 self.logger.info("Intializing class: %s" % cls.__name__)
+                self.logger.debug("Log level: %s" % self.logger.level)
 
                 if args:
                     self.logger.debug("Args: %s" % repr(args))
@@ -53,7 +54,8 @@ def loggify(cls):
             Does not log functions starting with _ to debug level
             """
             attr = super().__getattribute__(name)
-            if callable(attr) and not name.startswith('__'):
+            # Ignore builtins
+            if callable(attr) and not name.startswith('__') and name not in ['get', 'set', 'items', 'keys', 'values']:
                 def wrapper(*args, **kwargs):
                     if not name.startswith('_'):
                         self.logger.debug("Calling function: %s" % name)

@@ -1,5 +1,5 @@
 __author__ = "desultory"
-__version__ = "0.3.0"
+__version__ = "0.3.1"
 
 
 from functools import wraps
@@ -17,7 +17,8 @@ def walk_dict(d, walk_key, raise_exception=True):
         return d[key][subkey]
 
 
-def check_dict(key, validate_dict=None, value=None, value_arg=None, contains=False, unset=False, raise_exception=False, log_level=10, return_val=False, return_arg=None, message=None):
+def check_dict(key, validate_dict=None, value=None, value_arg=None, contains=False, unset=False,
+               raise_exception=False, log_level=10, return_val=False, return_arg=None, message=None):
     """
     Adds a check for a dict key to a function.
     If the dict is nto passed, uses the first argument of the function (often self).

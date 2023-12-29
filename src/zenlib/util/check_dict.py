@@ -1,5 +1,5 @@
 __author__ = "desultory"
-__version__ = "0.2.0"
+__version__ = "0.3.0"
 
 
 from functools import wraps
@@ -29,12 +29,15 @@ def check_dict(key, validate_dict=None, value=None, value_arg=None, unset=False,
             if hasattr(args[0], "__dict__"):
                 validate_dict = args[0]
 
+            check_val = args[value_arg] if value_arg is not None else value
             if hasattr(args[0], "logger"):
                 args[0].logger.debug("[%s] Checking dict key: %s" % (func.__name__, key))
                 if isinstance(validate_dict, dict):
                     args[0].logger.debug("[%s] Dict:\n%s" % (func.__name__, validate_dict))
                 else:
                     args[0].logger.debug("[%s] Dict: %s" % (func.__name__, validate_dict))
+                if check_val is not None:
+                    args[0].logger.debug("[%s] Checking for value: %s" % (func.__name__, check_val))
 
             if not validate_dict:
                 raise ValueError("validate_dict must be specified.")
@@ -67,9 +70,12 @@ def check_dict(key, validate_dict=None, value=None, value_arg=None, unset=False,
                 elif not unset:
                     raise ValueError("Unable to find key: %s." % key)
 
-            check_val = args[value_arg] if value_arg is not None else value
-            if check_val is not None and dict_val != check_val:
-                return dispatch_msg("[%s] Key: %s has value: %s, but expected: %s." % (func.__name__, key, dict_val, value))
+            if check_val is not None:
+                if isinstance(dict_val, dict):
+                    if check_val not in dict_val:
+                        return dispatch_msg("[%s] Dict does not contain key '%s': %s" % (func.__name__, check_val, dict_val))
+                elif dict_val != check_val:
+                    return dispatch_msg("[%s] Key: %s has value: %s, but expected: %s." % (func.__name__, key, dict_val, check_val))
 
             if hasattr(args[0], "logger"):
                 args[0].logger.debug("[%s] Validation successful for key: %s." % (func.__name__, key))

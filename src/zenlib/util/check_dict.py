@@ -17,7 +17,7 @@ def walk_dict(d, walk_key, raise_exception=True):
         return d[key][subkey]
 
 
-def check_dict(key, validate_dict=None, value=None, value_arg=None, unset=False, raise_exception=False, log_level=10, return_val=False, return_arg=None, message=None):
+def check_dict(key, validate_dict=None, value=None, value_arg=None, contains=False, unset=False, raise_exception=False, log_level=10, return_val=False, return_arg=None, message=None):
     """
     Adds a check for a dict key to a function.
     If the dict is nto passed, uses the first argument of the function (often self).
@@ -71,7 +71,7 @@ def check_dict(key, validate_dict=None, value=None, value_arg=None, unset=False,
                     raise ValueError("Unable to find key: %s." % key)
 
             if check_val is not None:
-                if isinstance(dict_val, dict):
+                if contains:
                     if check_val not in dict_val:
                         return dispatch_msg("[%s] Dict does not contain key '%s': %s" % (func.__name__, check_val, dict_val))
                 elif dict_val != check_val:

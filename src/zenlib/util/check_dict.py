@@ -1,20 +1,9 @@
 __author__ = "desultory"
-__version__ = "0.3.1"
+__version__ = "0.4.1"
 
 
 from functools import wraps
-
-
-def walk_dict(d, walk_key, raise_exception=True):
-    """ Walks a dict using a dict structured as the path to the key. """
-    for key, subkey in walk_key.items():
-        if isinstance(subkey, dict):
-            return walk_dict(d[key], subkey, raise_exception=raise_exception)
-        if key not in d and not raise_exception:
-            return
-        if subkey not in d[key] and not raise_exception:
-            return
-        return d[key][subkey]
+from .walk_dict import walk_dict
 
 
 def check_dict(key, validate_dict=None, value=None, value_arg=None, contains=False, unset=False,
@@ -65,7 +54,7 @@ def check_dict(key, validate_dict=None, value=None, value_arg=None, contains=Fal
                     else:
                         dict_val = validate_dict[key]
             elif isinstance(key, dict):
-                if dict_val := walk_dict(validate_dict, key, raise_exception=raise_exception):
+                if dict_val := walk_dict(validate_dict, key, fail_safe=not raise_exception):
                     if unset:
                         return dispatch_msg("[%s] Key is set when it should be unset: %s." % (func.__name__, dict_val))
                 elif not unset:

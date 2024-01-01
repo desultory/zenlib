@@ -3,14 +3,12 @@ __version__ = "1.0.0"
 
 
 from zenlib.logging import loggify
-from zenlib.util import handle_plural
+from .handle_plural import handle_plural
 
 
 @loggify
 class NoDupFlatList(list):
-    """
-    List that automatically filters duplicate elements when appended and concatenated
-    """
+    """ List that automatically filters duplicate elements when appended and concatenated. """
     def __init__(self, no_warn=False, log_bump=0, *args, **kwargs):
         self.no_warn = no_warn
         self.logger.setLevel(self.logger.parent.level + log_bump)

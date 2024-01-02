@@ -28,8 +28,5 @@ def threaded(function):
         thread = Thread(target=exception_wrapper, args=(self, *args), kwargs=kwargs, name=function.__name__)
         self._threads.append((thread, thread_exception))
         thread.start()
-        retval = thread_return.get()
-        print(retval)
-        print("asdfasdfasdf")
-        return retval
+        return thread_return.get()
     return wrapper

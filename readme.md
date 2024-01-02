@@ -14,15 +14,23 @@ The following additional kwargs are handled in __init__:
 * `_log_init` (bool) Can be passed to loggified classes, to enable or disable additional initialization logging.
 * `_log_bump` (int) Changes the log level for added loggers.
 
-Loggified classes will also log use of \_\_getattribute\_\_, \_\_setattr\_\_,  and \_\_getitem\_\_.
+Loggified classes will also log use of \_\_setattr\_\_,  and \_\_getitem\_\_.
 
-Functions returned from \_\_getattribute\_\_ will automatically log additioanl information such as passed args and results.
+### log_call
+
+Decorator for methods, logs calls and args. Log level adjustable by chaning `log_level`.
 
 ### ColorLognameFormatter
 
 A `logging.Formatter` which colors the loglevel portion.
 
 ## Threading
+
+### ZenThread
+
+An extension of the builtin thread that sets results to self.return_value and exceptions to self.exception.
+
+Supports re-starting and looping with the self.loop event.
 
 ### @threaded
 

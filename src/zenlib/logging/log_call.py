@@ -1,5 +1,5 @@
 __author__ = "desultory"
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 from functools import wraps
 
@@ -14,4 +14,4 @@ def log_call(log_level=10):
             self.logger.log(log_level, "[%s] Finished with result: %s" % (func.__name__, result))
             return result
         return log_wrapper
-
+    return decorator

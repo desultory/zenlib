@@ -1,11 +1,11 @@
 __author__ = "desultory"
-__version__ = "1.2.0"
+__version__ = "1.3.0"
 
 from .colorlognameformatter import ColorLognameFormatter
 
 from logging import Logger, getLogger, StreamHandler
 from sys import modules
-from functools import update_wrapper, wraps
+from functools import wraps
 from inspect import signature
 
 
@@ -25,6 +25,9 @@ def loggify(cls):
             self.logger = parent_logger.getChild(cls.__name__)
             # Bump the log level if _log_bump is passed
             self.logger.setLevel(self.logger.parent.level + kwargs.pop('_log_bump', 0))
+
+            # Add ignore list for setattr logging
+            self._getattr_log_ignore = kwargs.pop('_getattr_log_ignore', [])
 
             # Add a colored stream handler if one does not exist
             if not _has_handler(self.logger):
@@ -50,28 +53,34 @@ def loggify(cls):
                 self.logger.log(5, "Init debug logging disabled for: %s" % cls.__name__)
 
             super().__init__(*args, **kwargs)
-            update_wrapper(self, cls)
 
         def __getattribute__(self, name):
             """
             Override for function use logging.
+            Returns super().__getattribute__ immediately if the super class is loggified.
             Does not override functions starting with __
             Does not log functions starting with _ to debug level
             """
             attr = super().__getattribute__(name)
             # Ignore builtins, add additional logging for functions
-            if callable(attr) and not name.startswith('__'):
+            if callable(attr) and not name.startswith('__') and name not in self._getattr_log_ignore:
+                self.logger.debug("Wrapping function: %s" % name)
                 log_level = 5 if name.startswith('_') else 10
 
-                # Add a wrapper, so the returned function will haev additional logging
+                # Add a wrapper, so the returned function will have additional logging
                 @wraps(attr)
                 def call_wrapper(*args, **kwargs):
                     self.logger.log(log_level, "Calling function: %s" % name)
-                    self.logger.log(5, "[%s] Calling function with args: %s, kwargs: %s" % (name, args, kwargs))
                     try:
-                        result = attr(self, *args, **kwargs) if signature(attr).parameters.get('self') else attr(*args, **kwargs)
+                        if signature(attr).parameters.get('self') and args[0] != self:
+                            args = (self, *args)
+                    except IndexError:
+                        args = (self,)
                     except ValueError:
-                        result = attr(*args, **kwargs)
+                        pass
+                    self.logger.log(5, "[%s] Calling function with args: %s, kwargs: %s" % (name, args, kwargs))
+                    result = attr(*args, **kwargs)
+
                     self.logger.log(5, "[%s] Finished with result: %s" % (name, result))
                     return result
                 return call_wrapper
@@ -96,4 +105,9 @@ def loggify(cls):
             if hasattr(super(), '__setitem__'):
                 super().__setitem__(name, value)
                 self.logger.log(5, "Setitem '%s' to: %s" % (name, value))
+
+    ClassLogger.__name__ = cls.__name__
+    ClassLogger.__module__ = cls.__module__
+    ClassLogger.__doc__ = cls.__doc__
+    ClassLogger.__qualname__ = cls.__qualname__
     return ClassLogger

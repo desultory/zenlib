@@ -1,5 +1,5 @@
 __author__ = 'desultory'
-__version__ = '1.0.0'
+__version__ = '1.1.0'
 
 from threading import Thread
 from queue import Queue
@@ -15,16 +15,21 @@ def threaded(function):
             self._threads = list()
 
         thread_exception = Queue()
+        thread_return = Queue()
 
         def exception_wrapper(*args, **kwargs):
             try:
-                function(*args, **kwargs)
+                thread_return.put(function(*args, **kwargs))
             except Exception as e:
                 self.logger.warning("Exception in thread: %s" % function.__name__)
                 thread_exception.put(e)
-                self.logger.debug(e)
+                self.logger.exception(e)
 
         thread = Thread(target=exception_wrapper, args=(self, *args), kwargs=kwargs, name=function.__name__)
-        thread.start()
         self._threads.append((thread, thread_exception))
+        thread.start()
+        retval = thread_return.get()
+        print(retval)
+        print("asdfasdfasdf")
+        return retval
     return wrapper

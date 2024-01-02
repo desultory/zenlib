@@ -1,21 +1,27 @@
 __author__ = "desultory"
-__version__ = "1.0.0"
+__version__ = "1.2.0"
 
-from threading import Thread, Event
-from zenlib.utils import update_init
+from .zenthread import ZenThread
+from threading import Event
+from zenlib.util import update_init
 
 
 def add_thread(name, target, description=None):
     """
-    Adds a thread of a class which targets the target
-    Creates a dict that contains the name of the thread as a key, with the thread as a value
-    Cteates basic helper functions to manage the thread
+    Adds a thread to a class instance.
+    The target is the function that the thread will run.
+    The description is passed to the thread as the name.
+    Creates a dictionary of threads in the class instance called threads.
+    The key is the name of the thread.
+    The value is the thread object.
     """
     def decorator(cls):
         def create_thread(self):
-            if not hasattr(self, 'threads'):
-                self.threads = dict()
-
+            """
+            This method reads the target from the decorator.
+            It is added to the class as f'create_{name}_thread'.
+            """
+            # If the tharget has a dot in it, it is a path to a function
             if "." in target:
                 target_parts = target.split(".")
                 target_attr = self
@@ -24,23 +30,22 @@ def add_thread(name, target, description=None):
             else:
                 target_attr = getattr(self, target)
 
-            self.threads[name] = Thread(target=target_attr, name=description)
-            self.logger.info("Created thread: %s" % name)
+            self.threads[name] = ZenThread(target=target_attr, name=description,
+                                           owner=self, logger=self.logger)
 
         def start_thread(self):
             thread = self.threads[name]
-            setattr(self, f"_stop_processing_{name}", Event())
             if thread._is_stopped:
                 self.logger.info("Re-creating thread")
                 getattr(self, f"create_{name}_thread")()
                 thread = self.threads[name]
 
             if thread._started.is_set() and not thread._is_stopped:
-                self.logger.warning("%s thread is already started" % name)
+                self.logger.warning("Thread is already started: %s" % name)
             else:
-                self.logger.info("Starting thread: %s" % name)
+                getattr(self, f"_running_{name}").set()
                 thread.start()
-                return True
+            return thread
 
         def stop_thread(self):
             thread = self.threads[name]
@@ -49,12 +54,12 @@ def add_thread(name, target, description=None):
                 self.logger.warning("Thread is not active: %s" % name)
                 dont_join = True
 
-            if hasattr(self, f"_stop_processing_{name}"):
-                self.logger.debug("Setting stop event for thread: %s" % name)
-                getattr(self, f"_stop_processing_{name}").set()
+            if hasattr(self, f"_running_{name}"):
+                self.logger.debug("Clearing running event for thread: %s" % name)
+                getattr(self, f"_stop_processing_{name}").clear()
 
             if hasattr(self, f"stop_{name}_thread_actions"):
-                self.logger.debug("Calling: %s" % f"stop_{name}_thread_actions")
+                self.logger.info("Calling: %s" % f"stop_{name}_thread_actions")
                 getattr(self, f"stop_{name}_thread_actions")()
 
             if hasattr(self, f"_{name}_timer"):
@@ -64,11 +69,13 @@ def add_thread(name, target, description=None):
             if not dont_join:
                 self.logger.info("Waiting on thread to end: %s" % name)
                 thread.join()
-            return True
 
         setattr(cls, f"create_{name}_thread", create_thread)
         setattr(cls, f"start_{name}_thread", start_thread)
         setattr(cls, f"stop_{name}_thread", stop_thread)
+        setattr(cls, f"_running_{name}", Event())
+        cls.threads = {}
 
+        # Update the __init__ method of the class
         return update_init(create_thread)(cls)
     return decorator

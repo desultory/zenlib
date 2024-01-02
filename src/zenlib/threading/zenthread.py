@@ -8,9 +8,8 @@ from zenlib.logging import loggify
 @loggify
 class ZenThread(Thread):
     """ A thread that stores the exception and return value of the function it runs. """
-    def __init__(self, owner=None, looping=False, *args, **kwargs):
+    def __init__(self, looping=False, *args, **kwargs):
         super().__init__(*args, **kwargs)
-        self.owner = owner
         self.exception = None
         self.return_value = None
         self.loop = Event()
@@ -26,7 +25,6 @@ class ZenThread(Thread):
     def run(self):
         """
         Runs the thread and stores the exception and return value.
-        Adds the owner to the args if the function has a self parameter.
         Clears the started flag when finished, does not delete the target.
         """
         if not self._started.is_set():

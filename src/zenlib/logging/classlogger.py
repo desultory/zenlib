@@ -1,5 +1,5 @@
 __author__ = "desultory"
-__version__ = "1.1.0"
+__version__ = "1.1.1"
 
 from .colorlognameformatter import ColorLognameFormatter
 
@@ -45,7 +45,7 @@ class ClassLogger:
             if class_version := getattr(self, '__version__', None):
                 self.logger.info("Class version: %s" % class_version)
         else:
-            self.logger.log(5, "Init debug logging disabled for: %s" % self.__name__)
+            self.logger.log(5, "Init debug logging disabled for: %s" % self.__class__.__name__)
 
     def __setattr__(self, name, value):
         """ Add logging to setattr. """

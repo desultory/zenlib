@@ -1,12 +1,10 @@
 __author__ = "desultory"
-__version__ = "1.3.0"
+__version__ = "1.5.0"
 
 from .colorlognameformatter import ColorLognameFormatter
 
 from logging import Logger, getLogger, StreamHandler
 from sys import modules
-from functools import wraps
-from inspect import signature
 
 
 def loggify(cls):
@@ -25,9 +23,6 @@ def loggify(cls):
             self.logger = parent_logger.getChild(cls.__name__)
             # Bump the log level if _log_bump is passed
             self.logger.setLevel(self.logger.parent.level + kwargs.pop('_log_bump', 0))
-
-            # Add ignore list for setattr logging
-            self._getattr_log_ignore = kwargs.pop('_getattr_log_ignore', [])
 
             # Add a colored stream handler if one does not exist
             if not _has_handler(self.logger):
@@ -53,39 +48,6 @@ def loggify(cls):
                 self.logger.log(5, "Init debug logging disabled for: %s" % cls.__name__)
 
             super().__init__(*args, **kwargs)
-
-        def __getattribute__(self, name):
-            """
-            Override for function use logging.
-            Returns super().__getattribute__ immediately if the super class is loggified.
-            Does not override functions starting with __
-            Does not log functions starting with _ to debug level
-            """
-            attr = super().__getattribute__(name)
-            # Ignore builtins, add additional logging for functions
-            if callable(attr) and not name.startswith('__') and name not in self._getattr_log_ignore:
-                self.logger.debug("Wrapping function: %s" % name)
-                log_level = 5 if name.startswith('_') else 10
-
-                # Add a wrapper, so the returned function will have additional logging
-                @wraps(attr)
-                def call_wrapper(*args, **kwargs):
-                    self.logger.log(log_level, "Calling function: %s" % name)
-                    try:
-                        if signature(attr).parameters.get('self') and args[0] != self:
-                            args = (self, *args)
-                    except IndexError:
-                        args = (self,)
-                    except ValueError:
-                        pass
-                    self.logger.log(5, "[%s] Calling function with args: %s, kwargs: %s" % (name, args, kwargs))
-                    result = attr(*args, **kwargs)
-
-                    self.logger.log(5, "[%s] Finished with result: %s" % (name, result))
-                    return result
-                return call_wrapper
-            else:
-                return attr
 
         def __setattr__(self, name, value):
             """ Add logging to setattr. """

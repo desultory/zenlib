@@ -47,7 +47,7 @@ def add_thread(name, target, description=None):
                 thread.start()
             return thread
 
-        def stop_thread(self):
+        def stop_thread(self, force=False):
             thread = self.threads[name]
             dont_join = False
             if not thread._started.is_set() or thread._is_stopped:
@@ -65,6 +65,10 @@ def add_thread(name, target, description=None):
             if hasattr(self, f"_{name}_timer"):
                 self.logger.info("Stopping the timer for thread: %s" % name)
                 getattr(self, f"_{name}_timer").cancel()
+
+            if force:
+                self.logger.info("Stopping thread: %s" % name)
+                thread.stop()
 
             if not dont_join:
                 self.logger.info("Waiting on thread to end: %s" % name)

@@ -56,7 +56,7 @@ def add_thread(name, target, description=None):
 
             if hasattr(self, f"_running_{name}"):
                 self.logger.debug("Clearing running event for thread: %s" % name)
-                getattr(self, f"_stop_processing_{name}").clear()
+                getattr(self, f"_running_{name}").clear()
 
             if hasattr(self, f"stop_{name}_thread_actions"):
                 self.logger.info("Calling: %s" % f"stop_{name}_thread_actions")

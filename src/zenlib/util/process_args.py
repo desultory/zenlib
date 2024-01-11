@@ -4,8 +4,9 @@ from zenlib.logging import ColorLognameFormatter
 def process_args(argparser, logger=None):
     args = argparser.parse_args()
     if args.version:
+        package = argparser.prog
         from importlib.metadata import version
-        print(f"{__package__} {version(__package__)}")
+        print(f"{package} {version(package)}")
         exit(0)
 
     if logger:

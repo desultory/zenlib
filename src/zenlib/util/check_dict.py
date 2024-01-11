@@ -1,13 +1,15 @@
 __author__ = "desultory"
-__version__ = "0.4.1"
+__version__ = "0.5.0"
 
 
 from functools import wraps
 from .walk_dict import walk_dict
 
 
-def check_dict(key, validate_dict=None, value=None, value_arg=None, contains=False, unset=False,
-               raise_exception=False, log_level=10, return_val=False, return_arg=None, message=None):
+def check_dict(key, validate_dict=None, value=None, value_arg=None,
+               contains=False, unset=False, not_empty=False,
+               raise_exception=False, return_val=False, return_arg=None,
+               log_level=10, message=None):
     """
     Adds a check for a dict key to a function.
     If the dict is nto passed, uses the first argument of the function (often self).
@@ -53,10 +55,14 @@ def check_dict(key, validate_dict=None, value=None, value_arg=None, contains=Fal
                         return dispatch_msg("[%s] Key is set when it should be unset: %s." % (func.__name__, key))
                     else:
                         dict_val = validate_dict[key]
+                        if not_empty and dict_val:
+                            return dispatch_msg("[%s] Key is not empty: %s." % (func.__name__, key))
             elif isinstance(key, dict):
                 if dict_val := walk_dict(validate_dict, key, fail_safe=not raise_exception):
                     if unset:
                         return dispatch_msg("[%s] Key is set when it should be unset: %s." % (func.__name__, dict_val))
+                    if not_empty and dict_val:
+                        return dispatch_msg("[%s] Key is not empty: %s." % (func.__name__, dict_val))
                 elif not unset:
                     raise ValueError("Unable to find key: %s." % key)
 

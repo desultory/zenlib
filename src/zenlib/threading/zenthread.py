@@ -2,11 +2,10 @@ __author__ = 'desultory'
 __version__ = '0.3.0'
 
 from threading import Thread, Event
-from zenlib.logging import loggify
+from zenlib.logging import ClassLogger
 
 
-@loggify
-class ZenThread(Thread):
+class ZenThread(ClassLogger, Thread):
     """ A thread that stores the exception and return value of the function it runs. """
     def __init__(self, looping=False, *args, **kwargs):
         super().__init__(*args, **kwargs)

@@ -6,5 +6,8 @@ from .update_init import update_init
 from .walk_dict import walk_dict
 from .check_dict import check_dict
 from .clear_widgets import clear_widgets
+from .init_logger import init_logger
+from .process_args import process_args
+from .init_argparser import init_argparser
 
-__all__ = ['handle_plural', 'NoDupFlatList', 'pretty_print', 'replace_file_line', 'update_init', 'walk_dict', 'check_dict', 'clear_widgets']
+__all__ = ['handle_plural', 'NoDupFlatList', 'pretty_print', 'replace_file_line', 'update_init', 'walk_dict', 'check_dict', 'clear_widgets', 'init_logger', 'process_args', 'init_argparser']

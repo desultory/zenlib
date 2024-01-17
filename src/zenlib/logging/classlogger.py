@@ -46,7 +46,6 @@ class ClassLogger:
             self.logger.log(5, "Init debug logging disabled for: %s" % self.__class__.__name__)
 
         if super().__class__.__class__ is not type:
-            print(super().__class__.__class__)
             super().__init__(*args, **kwargs)
 
     def __setattr__(self, name, value):

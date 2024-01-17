@@ -1,5 +1,5 @@
 __author__ = "desultory"
-__version__ = "1.2.0"
+__version__ = "1.3.0"
 
 from .colorlognameformatter import ColorLognameFormatter
 
@@ -56,10 +56,10 @@ class ClassLogger:
         if not hasattr(self, 'logger') or not isinstance(self.logger, Logger):
             return
 
-        if isinstance(value, list) or isinstance(value, dict) or isinstance(value, str) and "\n" in value:
-            self.logger.log(5, "Setattr '%s' to:\n%s" % (name, getattr(self, name)))
+        elif isinstance(value, list) or isinstance(value, dict) or isinstance(value, str) and "\n" in value:
+            self.logger.log(5, "Setattr '%s' to:\n%s" % (name, value))
         else:
-            self.logger.log(5, "Setattr '%s' to: %s" % (name, getattr(self, name)))
+            self.logger.log(5, "Setattr '%s' to: %s" % (name, value))
 
     def __setitem__(self, name, value):
         """ Add logging to dict setitem. """

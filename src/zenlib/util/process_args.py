@@ -21,12 +21,11 @@ def process_args(argparser, logger=None):
             log_level = 20
         logger.setLevel(log_level)
 
-        if log_level < 10:
-            format_str = '%(levelname)s | %(name)-42s | %(message)s'
-        elif log_level < 20:
-            format_str = '%(levelname)s | %(name)-42s | %(message)s'
+        format_str = '%(asctime)s | ' if args.log_time else ''
+        if log_level < 20:
+            format_str += '%(levelname)s | %(name)-42s | %(message)s'
         else:
-            format_str = None
+            format_str += '%(levelname)s | %(message)s'
         formatter = ColorLognameFormatter(format_str) if not args.no_log_color else Formatter(format_str)
 
         # Add the formatter to the first handler, or add a new handler

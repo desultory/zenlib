@@ -8,6 +8,7 @@ def init_argparser(prog=None, description=None):
     argparser.add_argument('-v', '--version', action='store_true', help='Print the version and exit.')
     argparser.add_argument('--log-file', type=str, help='Log file path.')
     argparser.add_argument('--log-level', type=str, help='Log level.')
+    argparser.add_argument('--log-time', action='store_true', help='Log timestamps.')
     argparser.add_argument('--no-log-color', action='store_true', help='Disable log color.')
 
     return argparser

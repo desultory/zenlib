@@ -1,14 +1,8 @@
 
-from logging import getLogger, StreamHandler
-from zenlib.logging import ColorLognameFormatter
+from logging import getLogger
 
 
 def init_logger(name=None, args=None):
     name = name or __name__
-    logger = getLogger(name)
-    handler = StreamHandler()
-    formatter = ColorLognameFormatter()
-    handler.setFormatter(formatter)
-    logger.addHandler(handler)
-    return logger
+    return getLogger(name)
 

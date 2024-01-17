@@ -1,4 +1,5 @@
 from zenlib.logging import ColorLognameFormatter
+from logging import Formatter
 
 
 def process_args(argparser, logger=None):
@@ -10,23 +11,31 @@ def process_args(argparser, logger=None):
         exit(0)
 
     if logger:
-        if args.verbose:
-            logger.setLevel(5)
-            formatter = ColorLognameFormatter('%(levelname)s | %(name)-42s | %(message)s')
+        if args.log_level:
+            log_level = int(args.log_level)
+        elif args.verbose:
+            log_level = 5
         elif args.debug:
-            logger.setLevel(10)
-            formatter = ColorLognameFormatter('%(levelname)s | %(name)-42s | %(message)s')
+            log_level = 10
         else:
-            logger.setLevel(20)
-            formatter = ColorLognameFormatter()
+            log_level = 20
+        logger.setLevel(log_level)
+
+        if log_level < 10:
+            format_str = '%(levelname)s | %(name)-42s | %(message)s'
+        elif log_level < 20:
+            format_str = '%(levelname)s | %(name)-42s | %(message)s'
+        else:
+            format_str = None
+        formatter = ColorLognameFormatter(format_str) if not args.no_log_color else Formatter(format_str)
 
         # Add the formatter to the first handler, or add a new handler
         for handler in logger.handlers:
             handler.setFormatter(formatter)
             break
         else:
-            from logging import StreamHandler
-            handler = StreamHandler()
+            from logging import StreamHandler, FileHandler
+            handler = StreamHandler() if args.log_file is None else FileHandler(args.log_file)
             handler.setFormatter(formatter)
             logger.addHandler(handler)
 

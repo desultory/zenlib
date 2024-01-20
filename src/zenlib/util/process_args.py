@@ -11,7 +11,7 @@ def process_args(argparser, logger=None):
         exit(0)
 
     if logger:
-        if args.log_level:
+        if args.log_level is not None:
             log_level = int(args.log_level)
         elif args.verbose:
             log_level = 5

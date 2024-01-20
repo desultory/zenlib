@@ -16,6 +16,11 @@ The following additional kwargs are handled in __init__:
 
 Loggified classes will also log use of \_\_setattr\_\_,  and \_\_getitem\_\_.
 
+
+### ClassLogger
+
+Like @loggify but meant to be used as a base class
+
 ### log_call
 
 Decorator for methods, logs calls and args. Log level adjustable by chaning `log_level`.
@@ -53,6 +58,55 @@ Once added, a thread will be added to `self.threads[threadname]`.
 ## Util
 
 Helpful utility functions/decorators.
+
+## main_funcs
+
+A collection of functions used when starting a script.
+
+### get_kwargs_from_args
+
+Processes argparser args and returns a kwargs dict.
+
+Adds a logger if passed, can apply over a base_kwargs dict.
+
+### init_logger
+
+Creates a logger using the passed name
+
+### init_argparser
+
+Creates an argparser with the passed program name/descrption.
+
+Adds arguments for basic things such as debug levels, log files, log options
+
+> The log options are used with `process_args` and a supplied logger.
+
+### process_args
+
+Takes a passed argparser and does basic argument parsing. Mostly used to handle log options for the passed logger.
+
+### get_args_n_kwargs
+
+Takes a package name, description, and optional arguments.
+
+Returns the argparser.args and logger as a tuple.
+
+Additional argparser arguments can be passed in the format:
+
+```
+ARGS = [
+    {'flags': ['-p', '--port'], 'dest': 'listen_port', 'type': int, 'nargs': '?', 'help': 'Port to listen on.'},
+    {'flags': ['-a', '--address'], 'dest': 'listen_ip', 'type': str, 'nargs': '?', 'help': 'Address to listen on.'},
+    {'flags': ['config_file'], 'type': str, 'nargs': '?', 'help': 'Config file to use.'}]
+```
+
+> The flags are unpackes as args for argparser.add_argument while the rest of the keys are unpacked into the kwargs.
+
+
+### get_kwargs
+
+Wraps `get_args_n_kwargs` and just returns the kwargs dict
+
 
 ## @handle_plural
 

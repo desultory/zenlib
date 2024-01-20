@@ -10,7 +10,8 @@ from .main_funcs import process_args
 from .main_funcs import init_argparser
 from .main_funcs import get_args_n_logger
 from .main_funcs import get_kwargs_from_args
+from .main_funcs import get_kwargs
 
 __all__ = ['handle_plural', 'NoDupFlatList', 'pretty_print', 'replace_file_line',
            'update_init', 'walk_dict', 'check_dict', 'init_logger', 'process_args',
-           'init_argparser', 'get_args_n_logger', 'get_kwargs_from_args']
+           'init_argparser', 'get_args_n_logger', 'get_kwargs_from_args', 'get_kwargs']

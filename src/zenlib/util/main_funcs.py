@@ -83,11 +83,10 @@ def process_args(argparser, logger=None):
     return args
 
 
-def get_args_n_logger(package, description: str, arguments=[], get_kwargs=False):
+def get_args_n_logger(package, description: str, arguments=[]):
     """ Takes a package name and description
     If arguments are passed, they are added to argparser.
-    If get_kwargs is set to True a kwarg dict will be returned.
-    If not, returns the parsed args and logger.
+    Returns the parsed args and logger.
     """
     argparser = init_argparser(prog=package, description=description)
     logger = init_logger(package)
@@ -97,8 +96,10 @@ def get_args_n_logger(package, description: str, arguments=[], get_kwargs=False)
         argparser.add_argument(*dest, **arg)
 
     args = process_args(argparser, logger=logger)
-
-    if get_kwargs:
-        return get_kwargs_from_args(args, logger=logger)
-
     return args, logger
+
+
+def get_kwargs(package, description: str, arguments=[]):
+    """ Like get_args_n_logger, but only returns kwargs """
+    args, logger = get_args_n_logger(package, description, arguments)
+    return get_kwargs_from_args(args, logger=logger)

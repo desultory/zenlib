@@ -99,7 +99,7 @@ def get_args_n_logger(package, description: str, arguments=[]):
     return args, logger
 
 
-def get_kwargs(package, description: str, arguments=[]):
+def get_kwargs(package, description: str, arguments=[], base_kwargs={}):
     """ Like get_args_n_logger, but only returns kwargs """
     args, logger = get_args_n_logger(package, description, arguments)
-    return get_kwargs_from_args(args, logger=logger)
+    return get_kwargs_from_args(args, logger=logger, base_kwargs=base_kwargs)

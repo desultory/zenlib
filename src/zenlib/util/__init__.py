@@ -8,5 +8,8 @@ from .check_dict import check_dict
 from .init_logger import init_logger
 from .process_args import process_args
 from .init_argparser import init_argparser
+from .get_args_n_logger import get_args_n_logger
 
-__all__ = ['handle_plural', 'NoDupFlatList', 'pretty_print', 'replace_file_line', 'update_init', 'walk_dict', 'check_dict', 'init_logger', 'process_args', 'init_argparser']
+__all__ = ['handle_plural', 'NoDupFlatList', 'pretty_print', 'replace_file_line',
+           'update_init', 'walk_dict', 'check_dict', 'init_logger', 'process_args',
+           'init_argparser', 'get_args_n_logger']

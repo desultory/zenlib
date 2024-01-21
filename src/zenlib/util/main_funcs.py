@@ -3,15 +3,17 @@ Functions to help with the main()
 """
 
 
-def get_kwargs_from_args(args, logger=None, base_kwargs={}):
-    """ Get kwargs from argparser args """
+def get_kwargs_from_args(args, logger=None, base_kwargs={}, drop_default=True):
+    """ Get kwargs from argparser args. Drop default doesn't add init_argparser args. """
     kwargs = base_kwargs.copy()
     if logger is not None:
         kwargs['logger'] = logger
 
     for arg in vars(args):
+        if drop_default and arg in ['debug', 'verbose', 'version', 'log_file', 'log_level', 'log_time', 'no_log_color']:
+            continue
         value = getattr(args, arg)
-        if value is None or value is False:
+        if value is None:
             continue
 
         kwargs[arg] = value
@@ -99,7 +101,7 @@ def get_args_n_logger(package, description: str, arguments=[]):
     return args, logger
 
 
-def get_kwargs(package, description: str, arguments=[], base_kwargs={}):
+def get_kwargs(package, description: str, arguments=[], base_kwargs={}, drop_default=True):
     """ Like get_args_n_logger, but only returns kwargs """
     args, logger = get_args_n_logger(package, description, arguments)
-    return get_kwargs_from_args(args, logger=logger, base_kwargs=base_kwargs)
+    return get_kwargs_from_args(args, logger=logger, base_kwargs=base_kwargs, drop_default=drop_default)

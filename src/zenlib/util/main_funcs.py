@@ -3,16 +3,18 @@ Functions to help with the main()
 """
 
 
-def get_kwargs_from_args(args, logger=None, base_kwargs={}, drop_default=True):
-    """ Get kwargs from argparser args. Drop default doesn't add init_argparser args. """
+def get_kwargs_from_args(args, logger=None, base_kwargs={}, drop_base=True):
+    """ Get kwargs from argparser args.
+    Drop base doesn't add init_argparser args. """
     kwargs = base_kwargs.copy()
     if logger is not None:
         kwargs['logger'] = logger
 
     for arg in vars(args):
-        if drop_default and arg in ['debug', 'verbose', 'version', 'log_file', 'log_level', 'log_time', 'no_log_color']:
+        if drop_base and arg in ['debug', 'verbose', 'version', 'log_file', 'log_level', 'log_time', 'no_log_color']:
             continue
         value = getattr(args, arg)
+
         if value is None:
             continue
 
@@ -85,23 +87,30 @@ def process_args(argparser, logger=None):
     return args
 
 
-def get_args_n_logger(package, description: str, arguments=[]):
+def get_args_n_logger(package, description: str, arguments=[], drop_default=True):
     """ Takes a package name and description
     If arguments are passed, they are added to argparser.
     Returns the parsed args and logger.
     """
+    from argparse import Namespace
     argparser = init_argparser(prog=package, description=description)
     logger = init_logger(package)
 
     for arg in arguments:
         dest = arg.pop('flags')
+        if drop_default:
+            arg['default'] = None
         argparser.add_argument(*dest, **arg)
 
     args = process_args(argparser, logger=logger)
+
+    if drop_default:
+        args = Namespace(**{name: value for name, value in vars(args).items() if value != argparser.get_default(name)})
+
     return args, logger
 
 
-def get_kwargs(package, description: str, arguments=[], base_kwargs={}, drop_default=True):
+def get_kwargs(package, description: str, arguments=[], base_kwargs={}, drop_default=True, drop_base=True):
     """ Like get_args_n_logger, but only returns kwargs """
-    args, logger = get_args_n_logger(package, description, arguments)
-    return get_kwargs_from_args(args, logger=logger, base_kwargs=base_kwargs, drop_default=drop_default)
+    args, logger = get_args_n_logger(package, description, arguments, drop_default=drop_default)
+    return get_kwargs_from_args(args, logger=logger, base_kwargs=base_kwargs, drop_base=drop_base)

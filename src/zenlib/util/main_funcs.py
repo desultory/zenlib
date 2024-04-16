@@ -87,7 +87,7 @@ def process_args(argparser, logger=None):
     return args
 
 
-def get_args_n_logger(package, description: str, arguments=[], drop_default=True):
+def get_args_n_logger(package, description: str, arguments=[], drop_default=False):
     """ Takes a package name and description
     If arguments are passed, they are added to argparser.
     Returns the parsed args and logger.
@@ -110,7 +110,7 @@ def get_args_n_logger(package, description: str, arguments=[], drop_default=True
     return args, logger
 
 
-def get_kwargs(package, description: str, arguments=[], base_kwargs={}, drop_default=True, drop_base=True):
+def get_kwargs(package, description: str, arguments=[], base_kwargs={}, drop_default=False, drop_base=True):
     """ Like get_args_n_logger, but only returns kwargs """
     args, logger = get_args_n_logger(package, description, arguments, drop_default=drop_default)
     return get_kwargs_from_args(args, logger=logger, base_kwargs=base_kwargs, drop_base=drop_base)

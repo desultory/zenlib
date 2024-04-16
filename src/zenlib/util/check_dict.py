@@ -12,8 +12,10 @@ def check_dict(key, validate_dict=None, value=None, value_arg=None,
                log_level=10, message=None):
     """
     Adds a check for a dict key to a function.
-    If the dict is nto passed, uses the first argument of the function (often self).
+    If the dict is not passed, uses the first argument of the function (often self).
     If a value is specified, checks that the value of the key matches the value.
+    If unset is True, checks that the key is not in the dict.
+    If not_empty is True, checks that the key is not empty.
     """
     def decorator(func):
         @wraps(func)

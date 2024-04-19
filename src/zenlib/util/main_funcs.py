@@ -2,6 +2,9 @@
 Functions to help with the main()
 """
 
+__version__ = '1.0.0'
+__author__ = 'desultory'
+
 
 def get_kwargs_from_args(args, logger=None, base_kwargs={}, drop_base=True):
     """ Get kwargs from argparser args.

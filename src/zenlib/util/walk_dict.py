@@ -1,5 +1,5 @@
 __author__ = "desultory"
-__version__ = "0.1.0"
+__version__ = "1.0.0"
 
 
 def walk_dict(d, walk_key, fail_safe=True):

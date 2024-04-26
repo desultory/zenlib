@@ -53,7 +53,7 @@ def check_dict(key, validate_dict=None, value=None, value_arg=None,
                     else:
                         dict_val = None
                 else:
-                    if unset:
+                    if unset and not contains:
                         return dispatch_msg("[%s] Key is set when it should be unset: %s." % (func.__name__, key))
                     else:
                         dict_val = validate_dict[key]
@@ -61,7 +61,7 @@ def check_dict(key, validate_dict=None, value=None, value_arg=None,
                             return dispatch_msg("[%s] Key is not empty: %s." % (func.__name__, key))
             elif isinstance(key, dict):
                 if dict_val := walk_dict(validate_dict, key, fail_safe=not raise_exception):
-                    if unset:
+                    if unset and not contains:
                         return dispatch_msg("[%s] Key is set when it should be unset: %s." % (func.__name__, dict_val))
                     if not_empty and not dict_val:
                         return dispatch_msg("[%s] Key is not empty: %s." % (func.__name__, dict_val))
@@ -70,7 +70,9 @@ def check_dict(key, validate_dict=None, value=None, value_arg=None,
 
             if check_val is not None:
                 if contains:
-                    if check_val not in dict_val:
+                    if unset and check_val in dict_val:
+                        return dispatch_msg("[%s] Key: %s contains value: %s, but should not." % (func.__name__, key, check_val))
+                    if check_val not in dict_val and not unset:
                         return dispatch_msg("[%s] Dict does not contain key '%s': %s" % (func.__name__, check_val, dict_val))
                 elif dict_val != check_val:
                     return dispatch_msg("[%s] Key: %s has value: %s, but expected: %s." % (func.__name__, key, dict_val, check_val))

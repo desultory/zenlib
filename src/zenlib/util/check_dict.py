@@ -58,13 +58,13 @@ def check_dict(key, validate_dict=None, value=None, value_arg=None,
                     else:
                         dict_val = validate_dict[key]
                         if not_empty and not dict_val:
-                            return dispatch_msg("[%s] Key is not empty: %s." % (func.__name__, key))
+                            return dispatch_msg("[%s] Key is empty: %s" % (func.__name__, key))
             elif isinstance(key, dict):
                 if dict_val := walk_dict(validate_dict, key, fail_safe=not raise_exception):
                     if unset and not contains:
                         return dispatch_msg("[%s] Key is set when it should be unset: %s." % (func.__name__, dict_val))
                     if not_empty and not dict_val:
-                        return dispatch_msg("[%s] Key is not empty: %s." % (func.__name__, dict_val))
+                        return dispatch_msg("[%s] Key is empty: %s." % (func.__name__, key))
                 elif not unset:
                     raise ValueError("Unable to find key: %s." % key)
 

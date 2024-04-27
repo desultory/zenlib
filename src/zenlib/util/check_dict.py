@@ -1,5 +1,5 @@
 __author__ = "desultory"
-__version__ = "1.0.0"
+__version__ = "1.1.0"
 
 
 from functools import wraps
@@ -65,6 +65,8 @@ def check_dict(key, validate_dict=None, value=None, value_arg=None,
                         return dispatch_msg("[%s] Key is set when it should be unset: %s." % (func.__name__, dict_val))
                     if not_empty and not dict_val:
                         return dispatch_msg("[%s] Key is empty: %s." % (func.__name__, key))
+                elif not_empty:
+                    return dispatch_msg("[%s] Unable to find key: %s." % (func.__name__, key))
                 elif not unset:
                     raise ValueError("Unable to find key: %s." % key)
 

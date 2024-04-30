@@ -1,5 +1,5 @@
 __author__ = "desultory"
-__version__ = "1.1.0"
+__version__ = "1.2.0"
 
 
 from functools import wraps
@@ -60,7 +60,14 @@ def check_dict(key, validate_dict=None, value=None, value_arg=None,
                         if not_empty and not dict_val:
                             return dispatch_msg("[%s] Key is empty: %s" % (func.__name__, key))
             elif isinstance(key, dict):
-                if dict_val := walk_dict(validate_dict, key, fail_safe=not raise_exception):
+                try:
+                    dict_val = walk_dict(validate_dict, key)
+                except KeyError:
+                    if not unset:
+                        return dispatch_msg("[%s] Unable to find search key: %s." % (func.__name__, key))
+                    else:
+                        dict_val = None
+                if dict_val:
                     if unset and not contains:
                         return dispatch_msg("[%s] Key is set when it should be unset: %s." % (func.__name__, dict_val))
                     if not_empty and not dict_val:

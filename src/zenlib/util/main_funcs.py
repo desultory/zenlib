@@ -2,8 +2,17 @@
 Functions to help with the main()
 """
 
-__version__ = '1.0.0'
+__version__ = '1.1.0'
 __author__ = 'desultory'
+
+
+BASE_ARGS = [{'flags': ['-d', '--debug'], 'action': 'store_true', 'help': 'Debug mode.'},
+             {'flags': ['-dd', '--trace'], 'action': 'store_true', 'help': 'Trace debug mode.'},
+             {'flags': ['-v', '--version'], 'action': 'store_true', 'help': 'Print the version and exit.'},
+             {'flags': ['--log-file'], 'type': str, 'help': 'Log file path.'},
+             {'flags': ['--log-level'], 'type': str, 'help': 'Log level.'},
+             {'flags': ['--log-time'], 'action': 'store_true', 'help': 'Log timestamps.'},
+             {'flags': ['--no-log-color'], 'action': 'store_true', 'help': 'Disable log color.'}]
 
 
 def get_kwargs_from_args(args, logger=None, base_kwargs={}, drop_base=True):
@@ -35,16 +44,7 @@ def init_logger(name=None):
 def init_argparser(prog=None, description=None):
     """ Initialize an argparser with common options. """
     from argparse import ArgumentParser
-
     argparser = ArgumentParser(prog=prog, description=description)
-    argparser.add_argument('-d', '--debug', action='store_true', help='Debug mode.')
-    argparser.add_argument('-dd', '--verbose', action='store_true', help='Verbose debug mode.')
-    argparser.add_argument('-v', '--version', action='store_true', help='Print the version and exit.')
-    argparser.add_argument('--log-file', type=str, help='Log file path.')
-    argparser.add_argument('--log-level', type=str, help='Log level.')
-    argparser.add_argument('--log-time', action='store_true', help='Log timestamps.')
-    argparser.add_argument('--no-log-color', action='store_true', help='Disable log color.')
-
     return argparser
 
 
@@ -90,11 +90,26 @@ def process_args(argparser, logger=None):
     return args
 
 
+def dump_args_for_autocomplete(args):
+    """ Dump args for autocomplete """
+    for arg in args:
+        if arg.get('action') not in ['store_true', 'store_false']:
+            continue
+        for flag in arg['flags']:
+            print(f"{flag} {arg.get('help')}")
+    exit(0)
+
+
 def get_args_n_logger(package, description: str, arguments=[], drop_default=False):
     """ Takes a package name and description
     If arguments are passed, they are added to argparser.
     Returns the parsed args and logger.
     """
+    arguments = BASE_ARGS + arguments
+    from sys import argv
+    if '--dump_args' in argv:
+        dump_args_for_autocomplete(arguments)
+
     from argparse import Namespace
     argparser = init_argparser(prog=package, description=description)
     logger = init_logger(package)

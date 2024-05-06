@@ -2,17 +2,17 @@
 Functions to help with the main()
 """
 
-__version__ = '1.1.0'
+__version__ = '1.1.1'
 __author__ = 'desultory'
 
 
-BASE_ARGS = [{'flags': ['-d', '--debug'], 'action': 'store_true', 'help': 'Debug mode.'},
-             {'flags': ['-dd', '--trace'], 'action': 'store_true', 'help': 'Trace debug mode.'},
-             {'flags': ['-v', '--version'], 'action': 'store_true', 'help': 'Print the version and exit.'},
-             {'flags': ['--log-file'], 'type': str, 'help': 'Log file path.'},
-             {'flags': ['--log-level'], 'type': str, 'help': 'Log level.'},
-             {'flags': ['--log-time'], 'action': 'store_true', 'help': 'Log timestamps.'},
-             {'flags': ['--no-log-color'], 'action': 'store_true', 'help': 'Disable log color.'}]
+BASE_ARGS = [{'flags': ['-d', '--debug'], 'action': 'store_true', 'help': 'enable debug mode (level 10)'},
+             {'flags': ['-dd', '--trace'], 'action': 'store_true', 'help': 'enable trace debug mode (level 5)'},
+             {'flags': ['-v', '--version'], 'action': 'store_true', 'help': 'print the version and exit'},
+             {'flags': ['--log-file'], 'type': str, 'help': 'set the path to the log file'},
+             {'flags': ['--log-level'], 'type': str, 'help': 'set the log level'},
+             {'flags': ['--log-time'], 'action': 'store_true', 'help': 'enable log timestamps'},
+             {'flags': ['--no-log-color'], 'action': 'store_true', 'help': 'disable log color'}]
 
 
 def get_kwargs_from_args(args, logger=None, base_kwargs={}, drop_base=True):
@@ -23,7 +23,7 @@ def get_kwargs_from_args(args, logger=None, base_kwargs={}, drop_base=True):
         kwargs['logger'] = logger
 
     for arg in vars(args):
-        if drop_base and arg in ['debug', 'verbose', 'version', 'log_file', 'log_level', 'log_time', 'no_log_color']:
+        if drop_base and arg in ['debug', 'trace', 'version', 'log_file', 'log_level', 'log_time', 'no_log_color']:
             continue
         value = getattr(args, arg)
 
@@ -62,7 +62,7 @@ def process_args(argparser, logger=None):
     if logger:
         if args.log_level is not None:
             log_level = int(args.log_level)
-        elif args.verbose:
+        elif args.trace:
             log_level = 5
         elif args.debug:
             log_level = 10

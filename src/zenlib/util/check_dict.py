@@ -1,5 +1,5 @@
 __author__ = "desultory"
-__version__ = "1.2.1"
+__version__ = "1.2.2"
 
 
 from functools import wraps
@@ -9,7 +9,7 @@ from .walk_dict import walk_dict
 def check_dict(key, validate_dict=None, value=None, value_arg=None,
                contains=False, unset=False, not_empty=False,
                raise_exception=False, return_val=False, return_arg=None,
-               log_level=10, _log_bump=0, message=None):
+               log_level=10, debug_level=5, message=None):
     """
     Adds a check for a dict key to a function.
     If the dict is not passed, uses the first argument of the function (often self).
@@ -27,13 +27,12 @@ def check_dict(key, validate_dict=None, value=None, value_arg=None,
 
             check_val = args[value_arg] if value_arg is not None else value
             if hasattr(args[0], "logger"):
-                lvl = max(10 - _log_bump, 0)
-                args[0].logger.log(lvl, "[%s] Checking dict key: %s" % (func.__name__, key))
+                args[0].logger.log(debug_level, "[%s] Checking dict key: %s" % (func.__name__, key))
                 if isinstance(validate_dict, dict):
-                    args[0].logger.log(lvl, "[%s] Dict:\n%s" % (func.__name__, validate_dict))
+                    args[0].logger.log(debug_level, "[%s] Dict:\n%s" % (func.__name__, validate_dict))
                 else:
-                    args[0].logger.log(lvl, "[%s] Data: %s" % (func.__name__, validate_dict))
-                args[0].logger.log(lvl, "[%s] Checking for value: %s" % (func.__name__, check_val))
+                    args[0].logger.log(debug_level, "[%s] Data: %s" % (func.__name__, validate_dict))
+                args[0].logger.log(debug_level, "[%s] Checking for value: %s" % (func.__name__, check_val))
 
             if not validate_dict:
                 raise ValueError("validate_dict must be specified.")
@@ -89,7 +88,7 @@ def check_dict(key, validate_dict=None, value=None, value_arg=None,
                     return dispatch_msg("[%s] Key: %s has value: %s, but expected: %s." % (func.__name__, key, dict_val, check_val))
 
             if hasattr(args[0], "logger"):
-                args[0].logger.debug("[%s] Validation successful for key: %s." % (func.__name__, key))
+                args[0].logger.log(debug_level, "[%s] Validation successful for key: %s." % (func.__name__, key))
 
             return func(*args, **kwargs)
         return validation_wrapper

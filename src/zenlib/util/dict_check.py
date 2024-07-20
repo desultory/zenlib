@@ -1,5 +1,5 @@
 __author__ = "desultory"
-__version__ = "1.1.1"
+__version__ = "1.2.0"
 
 from functools import wraps
 
@@ -22,9 +22,10 @@ def contains(key, message=None, is_set=True, raise_exception=False, log_level=10
         def _contains(*args, **kwargs):
             self = args[0]
             msg = f"[{func.__name__}] {message}" if message else None
+            value = self.get(key)
             if key not in self:
                 return return_check(self, msg or "[%s] Unable to find key: %s." % (func.__name__, key), raise_exception, log_level)
-            if is_set and not (self[key] or repr(key) == "PosixPath('.')"):
+            if is_set and not (value or repr(value) == "PosixPath('.')"):
                 return return_check(self, msg or "[%s] Key is not set: %s." % (func.__name__, key), raise_exception, log_level)
             self.logger.log(debug_level, "[%s] Contains check passed for: %s" % (func.__name__, key))
             return func(*args, **kwargs)
@@ -42,7 +43,8 @@ def unset(key, message=None, raise_exception=False, log_level=10, debug_level=5)
         def _unset(*args, **kwargs):
             self = args[0]
             msg = f"[{func.__name__}] {message}" if message else None
-            if key in self and (self[key] or repr(key) == "PosixPath('.')"):
+            value = self.get(key)
+            if key in self and (value or repr(value) == "PosixPath('.')"):
                 return return_check(self, msg or "[%s] Key is set: %s." % (func.__name__, key), raise_exception, log_level)
             self.logger.log(debug_level, "[%s] Unset check passed for: %s" % (func.__name__, key))
             return func(*args, **kwargs)

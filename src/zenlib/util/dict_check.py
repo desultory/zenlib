@@ -1,5 +1,5 @@
 __author__ = "desultory"
-__version__ = "1.2.0"
+__version__ = "1.2.1"
 
 from functools import wraps
 
@@ -44,9 +44,9 @@ def unset(key, message=None, raise_exception=False, log_level=10, debug_level=5)
             self = args[0]
             msg = f"[{func.__name__}] {message}" if message else None
             value = self.get(key)
-            if key in self and (value or repr(value) == "PosixPath('.')"):
-                return return_check(self, msg or "[%s] Key is set: %s." % (func.__name__, key), raise_exception, log_level)
-            self.logger.log(debug_level, "[%s] Unset check passed for: %s" % (func.__name__, key))
+            if key in self and (repr(value) != "PosixPath('.')" and value):
+                return return_check(self, msg or "[%s] Key '%s' is set: %s." % (func.__name__, key, repr(value)), raise_exception, log_level)
+            self.logger.log(debug_level, "[%s] Unset check passed for: %s; %s" % (func.__name__, key, repr(value)))
             return func(*args, **kwargs)
         return _unset
     return _dict_unset

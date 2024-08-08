@@ -1,5 +1,5 @@
 __author__ = "desultory"
-__version__ = "1.2.1"
+__version__ = "1.2.2"
 
 from functools import wraps
 
@@ -25,7 +25,7 @@ def contains(key, message=None, is_set=True, raise_exception=False, log_level=10
             value = self.get(key)
             if key not in self:
                 return return_check(self, msg or "[%s] Unable to find key: %s." % (func.__name__, key), raise_exception, log_level)
-            if is_set and not (value or repr(value) == "PosixPath('.')"):
+            if is_set and (not value or repr(value) == "PosixPath('.')"):
                 return return_check(self, msg or "[%s] Key is not set: %s." % (func.__name__, key), raise_exception, log_level)
             self.logger.log(debug_level, "[%s] Contains check passed for: %s" % (func.__name__, key))
             return func(*args, **kwargs)

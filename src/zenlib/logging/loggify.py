@@ -65,7 +65,7 @@ def loggify(cls):
         def __setitem__(self, name, value):
             """ Add logging to dict setitem. """
             if hasattr(super(), '__setitem__'):
-                dict.__setitem__(name, value)
+                dict.__setitem__(self, name, value)
                 self.logger.log(5, "Setitem '%s' to: %s" % (name, value))
 
     ClassLogger.__name__ = cls.__name__

@@ -1,10 +1,15 @@
 __author__ = "desultory"
-__version__ = "2.0.1"
+__version__ = "2.1.0"
 
 from .colorlognameformatter import ColorLognameFormatter
 
 from logging import Logger, getLogger, StreamHandler
 from sys import modules
+
+
+def setitem_logger(self, name, value):
+    dict.__setitem__(self, name, value)
+    self.logger.log(5, "Setitem '%s' to: %s" % (name, value))
 
 
 def loggify(cls):
@@ -62,14 +67,12 @@ def loggify(cls):
             else:
                 self.logger.log(5, "Setattr '%s' to: %s" % (name, getattr(self, name)))
 
-        def __setitem__(self, name, value):
-            """ Add logging to dict setitem. """
-            if isinstance(self, dict):
-                dict.__setitem__(self, name, value)
-                self.logger.log(5, "Setitem '%s' to: %s" % (name, value))
-
     ClassLogger.__name__ = cls.__name__
     ClassLogger.__module__ = cls.__module__
     ClassLogger.__doc__ = cls.__doc__
     ClassLogger.__qualname__ = cls.__qualname__
+
+    if isinstance(cls, dict):
+        ClassLogger.__setitem__ = setitem_logger
+
     return ClassLogger

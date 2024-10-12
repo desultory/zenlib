@@ -1,5 +1,5 @@
 __author__ = "desultory"
-__version__ = "2.2.0"
+__version__ = "2.3.0"
 
 from .colorlognameformatter import ColorLognameFormatter
 
@@ -32,7 +32,7 @@ def loggify(cls):
                 self.logger.info("Adding default handler: %s" % self.logger)
 
             # Log class init if _log_init is passed
-            if kwargs.pop('_log_init', True) is True:
+            if kwargs.pop('_log_init', False) is True:
                 self.logger.info("Intializing class: %s" % cls.__name__)
                 self.logger.debug("Log level: %s" % self.logger.level)
 

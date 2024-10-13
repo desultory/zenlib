@@ -10,6 +10,7 @@ def handle_plural(function, log_level=10):
     The last passed argument should be the iterable.
     Logs using the logger attribute if it exists.
     """
+
     def wrapper(self, *args):
         def log(msg, level=log_level):
             if hasattr(self, "logger"):
@@ -37,8 +38,18 @@ def handle_plural(function, log_level=10):
         elif isinstance(focus_arg, dict):
             log("Expanding dict: %s" % focus_arg)
             for key, value in focus_arg.items():
-                function(self, *(other_args + (key, value,)))
+                function(
+                    self,
+                    *(
+                        other_args
+                        + (
+                            key,
+                            value,
+                        )
+                    ),
+                )
         else:
             log(f"Arguments were not expanded: {args}", log_level - 5)
             return function(self, *args)
+
     return wrapper

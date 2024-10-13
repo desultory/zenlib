@@ -26,9 +26,7 @@ def pretty_print(input_data, indent=0, prefix="", print_out=False):
             out += pretty_print(item, indent, prefix="+ ")
     elif hasattr(input_data, "name") and hasattr(input_data, "value"):
         # If the value is not iterable, it is a single value
-        if not hasattr(input_data.value, "__getitem__") or isinstance(
-            input_data.value, str
-        ):
+        if not hasattr(input_data.value, "__getitem__") or isinstance(input_data.value, str):
             out += " " * indent + f"{prefix}{input_data.name}: {input_data.value}\n"
         else:
             out += (
@@ -37,9 +35,7 @@ def pretty_print(input_data, indent=0, prefix="", print_out=False):
             )
     elif isinstance(input_data, type):
         out += " " * indent + f"{prefix}<{input_data.__name__}>\n"
-    elif not isinstance(input_data, str) and (
-        hasattr(input_data, "__getitem__") or hasattr(input_data, "__iter__")
-    ):
+    elif not isinstance(input_data, str) and (hasattr(input_data, "__getitem__") or hasattr(input_data, "__iter__")):
         for key in input_data:
             out += pretty_print(key, indent, prefix="+ ")
     else:

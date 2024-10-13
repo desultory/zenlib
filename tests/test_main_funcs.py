@@ -26,10 +26,10 @@ class TestMainFuncs(TestCase):
 
     def _check_for_test_args(self, args):
         self.assertIsInstance(args, Namespace)
-        if hasattr(args, "arg1"):
-            self.assertEqual(args.arg1, "discover")
-        if hasattr(args, "arg2"):
-            self.assertEqual(args.arg2, "tests")
+        if arg1 := getattr(args, "arg1", None):
+            self.assertEqual(arg1, "discover")
+        if arg2 := getattr(args, "arg2", None):
+            self.assertEqual(arg2, "tests")
 
     def test_get_args_n_logger(self):
         args, logger = get_args_n_logger("zenlib_test", "test description", get_test_args())

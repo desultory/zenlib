@@ -9,7 +9,7 @@ DEFAULT_ARGS = ["debug", "trace", "version", "log_time", "no_log_color"]
 
 
 def get_test_args():
-    return [{"flags": ["arg1"], "action": "store"}, {"flags": ["arg2"], "action": "store"}]
+    return [{"flags": ["arg1"], "action": "store", "nargs": "?"}, {"flags": ["arg2"], "action": "store", "nargs": "?"}]
 
 
 class TestMainFuncs(TestCase):

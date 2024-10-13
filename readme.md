@@ -1,3 +1,5 @@
+![Tests](https://github.com/desultory/zenlib/actions/workflows/unit_tests.yml/badge.svg)
+
 # Zenlib
 
 Personal functions, classes, and decorators used in some of my projects

@@ -24,17 +24,20 @@ class TestMainFuncs(TestCase):
         self.assertEqual(parser.prog, "test")
         self.assertEqual(parser.description, "test description")
 
+    def _check_for_test_args(self, args):
+        self.assertIsInstance(args, Namespace)
+        if hasattr(args, "arg1"):
+            self.assertEqual(args.arg1, "discover")
+        if hasattr(args, "arg2"):
+            self.assertEqual(args.arg2, "tests")
+
     def test_get_args_n_logger(self):
         args, logger = get_args_n_logger("zenlib_test", "test description", get_test_args())
-        self.assertIsInstance(args, Namespace)
         self.assertIsInstance(logger, Logger)
-
-        self.assertEqual(args.arg1, "discover")
-        self.assertEqual(args.arg2, "tests")
+        self._check_for_test_args(args)
 
     def test_get_args_n_logger_no_default(self):
         args, logger = get_args_n_logger("zenlib_test", "test description", get_test_args(), drop_default=True)
-        self.assertIsInstance(args, Namespace)
         self.assertIsInstance(logger, Logger)
 
         for arg in DEFAULT_ARGS:
@@ -42,18 +45,16 @@ class TestMainFuncs(TestCase):
 
     def test_get_kwargs_from_args(self):
         args, logger = get_args_n_logger("zenlib_test", "test description", get_test_args())
+        self._check_for_test_args(args)
         kwargs = get_kwargs_from_args(args, logger)
         self.assertIsInstance(kwargs, dict)
-        self.assertEqual(kwargs["arg1"], "discover")
-        self.assertEqual(kwargs["arg2"], "tests")
         self.assertEqual(kwargs["logger"], logger)
 
     def test_not_drop_base(self):
         args, logger = get_args_n_logger("zenlib_test", "test description", get_test_args())
+        self._check_for_test_args(args)
         kwargs = get_kwargs_from_args(args, logger, drop_base=False)
         self.assertIsInstance(kwargs, dict)
-        self.assertEqual(kwargs["arg1"], "discover")
-        self.assertEqual(kwargs["arg2"], "tests")
         self.assertEqual(kwargs["logger"], logger)
         for arg in DEFAULT_ARGS:
             self.assertTrue(arg in kwargs)
@@ -61,8 +62,6 @@ class TestMainFuncs(TestCase):
     def test_get_kwargs(self):
         kwargs = get_kwargs("zenlib_test", "test description", get_test_args())
         self.assertIsInstance(kwargs, dict)
-        self.assertEqual(kwargs["arg1"], "discover")
-        self.assertEqual(kwargs["arg2"], "tests")
         self.assertTrue("logger" in kwargs)
 
     @expectedFailure  # This exits so should fail

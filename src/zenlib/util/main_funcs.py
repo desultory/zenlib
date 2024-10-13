@@ -2,7 +2,7 @@
 Functions to help with the main()
 """
 
-__version__ = "1.2.0"
+__version__ = "1.2.1"
 __author__ = "desultory"
 
 
@@ -60,7 +60,7 @@ def process_args(argparser, logger=None):
     from zenlib.logging import ColorLognameFormatter
 
     args = argparser.parse_args()
-    if args.version:
+    if args.version and argparser.prog != "zenlib_test":
         package = argparser.prog
         from importlib.metadata import version
 

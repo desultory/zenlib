@@ -1,18 +1,17 @@
-from unittest import TestCase, main
 from collections import UserDict
 from pathlib import Path
+from unittest import TestCase, main
 
-from zenlib.util import contains, unset
 from zenlib.logging import loggify
+from zenlib.util import contains, unset
 
-
-TEST_DICT = {'a': [1, 2, 3],
-             'b': 123,
-             'c': '123',
-             'd': {'aa': 1, 'bb': 2},
-             'e': None,
-             'p': Path(),
-             'q': Path('test')}
+TEST_DICT = {"a": [1, 2, 3],
+             "b": 123,
+             "c": "123",
+             "d": {"aa": 1, "bb": 2},
+             "e": None,
+             "p": Path(),
+             "q": Path("test")}
 
 
 @loggify
@@ -21,47 +20,47 @@ class TestDict(UserDict):
         super().__init__(*args, **kwargs)
         self.data = TEST_DICT
 
-    @contains('a')
+    @contains("a")
     def _contains_a(self):
         return True
 
-    @contains('e')
+    @contains("e")
     def _contains_e(self):
-        assert False, 'This check should not pass'
+        assert False, "This check should not pass"
 
-    @contains('e', is_set=False)
+    @contains("e", is_set=False)
     def _contains_e_unset(self):
         return True
 
-    @contains('p')
+    @contains("p")
     def _contains_p(self):
-        assert False, 'This check should not pass'
+        assert False, "This check should not pass"
 
-    @contains('p', is_set=False)
+    @contains("p", is_set=False)
     def _contains_p_unset(self):
         return True
 
-    @contains('q')
+    @contains("q")
     def _contains_q(self):
         return True
 
-    @contains('z')
+    @contains("z")
     def _contains_z(self):
-        assert False, 'This check should not pass'
+        assert False, "This check should not pass"
 
-    @unset('a')
+    @unset("a")
     def _unset_a(self):
-        assert False, 'This check should not pass'
+        assert False, "This check should not pass"
 
-    @unset('a', raise_exception=True)
+    @unset("a", raise_exception=True)
     def _unset_a_exception(self):
-        assert False, 'This check should not pass'
+        assert False, "This check should not pass"
 
-    @unset('e')
+    @unset("e")
     def _unset_e(self):
         return True
 
-    @unset('z')
+    @unset("z")
     def _unset_z(self):
         return True
 
@@ -86,6 +85,5 @@ class TestDictCheck(TestCase):
         self.assertTrue(test_dict._unset_e())
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
-

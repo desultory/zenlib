@@ -2,7 +2,7 @@
 Functions to help with the main()
 """
 
-__version__ = "1.2.1"
+__version__ = "1.3.0"
 __author__ = "desultory"
 
 
@@ -53,14 +53,19 @@ def get_kwargs_from_args(args, logger=None, base_kwargs={}, drop_base=True):
     return kwargs
 
 
-def process_args(argparser, logger=None):
+def process_args(argparser, logger=None, strict=False):
     """Process argparser args, optionally configuring a logger."""
     from logging import Formatter
 
     from zenlib.logging import ColorLognameFormatter
 
-    args = argparser.parse_args()
-    if args.version and argparser.prog != "zenlib_test":
+    if strict:
+        args = argparser.parse_args()
+    else:
+        args, unknown = argparser.parse_known_args()
+        args._unknown = unknown
+
+    if 'version' in args and args.version and argparser.prog != "zenlib_test":
         package = argparser.prog
         from importlib.metadata import version
 
@@ -96,6 +101,9 @@ def process_args(argparser, logger=None):
             handler.setFormatter(formatter)
             logger.addHandler(handler)
 
+        if '__unknown' in args and args.__unknown:
+            logger.warning(f"Unknown args: {args.__unknown}")
+
     return args
 
 
@@ -113,37 +121,42 @@ def dump_args_for_autocomplete(args, test=False):
     exit(0)
 
 
-def get_args_n_logger(package, description: str, arguments=[], drop_default=False):
+def get_args_n_logger(package, description: str, arguments=[], drop_default=False, strict=False):
     """Takes a package name and description
     If arguments are passed, they are added to argparser.
     Returns the parsed args and logger.
     """
-    arguments = get_base_args() + arguments
+    all_arguments = get_base_args() + arguments
     from sys import argv
-
     if "--dump_args" in argv:
-        dump_args_for_autocomplete(arguments)
+        dump_args_for_autocomplete(all_arguments)
 
-    from argparse import Namespace
-
+    from argparse import Namespace, ArgumentError
     argparser = init_argparser(prog=package, description=description)
     logger = init_logger(package)
 
-    for arg in arguments:
-        dest = arg.pop("flags")
-        if drop_default:
-            arg["default"] = None
-        argparser.add_argument(*dest, **arg)
+    def add_args(args, argparser):
+        for arg in args:
+            dest = arg.pop("flags")
+            if drop_default:
+                arg["default"] = None
+            try:
+                argparser.add_argument(*dest, **arg)
+            except ArgumentError:
+                pass
 
-    args = process_args(argparser, logger=logger)
+    add_args(arguments, argparser)  # Add custom args first, then base args
+    add_args(get_base_args(), argparser)
 
-    if drop_default:
+    args = process_args(argparser, logger=logger, strict=strict)
+
+    if drop_default:  # Remove defaults from args
         args = Namespace(**{name: value for name, value in vars(args).items() if value != argparser.get_default(name)})
 
     return args, logger
 
 
-def get_kwargs(package, description: str, arguments=[], base_kwargs={}, drop_default=False, drop_base=True):
+def get_kwargs(package, description: str, arguments=[], base_kwargs={}, drop_default=False, drop_base=True, strict=False):
     """Like get_args_n_logger, but only returns kwargs"""
-    args, logger = get_args_n_logger(package, description, arguments, drop_default=drop_default)
+    args, logger = get_args_n_logger(package, description, arguments, drop_default=drop_default, strict=strict)
     return get_kwargs_from_args(args, logger=logger, base_kwargs=base_kwargs, drop_base=drop_base)

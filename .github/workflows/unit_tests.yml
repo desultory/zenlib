@@ -31,5 +31,4 @@ jobs:
         venv/bin/pip install .
     - name: Run unit tests
       run: |
-        cd tests
-        ../venv/bin/python -m unittest -v
+        venv/bin/python -m unittest discover -v tests

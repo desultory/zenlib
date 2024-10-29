@@ -33,7 +33,10 @@ class TestMainFuncs(TestCase):
             self.fail("discover not found in args")
 
         search_strs = ['tests', './tests']
-        search_locs = [args.args, args._unknown]
+        if '_unknown' in args:
+            search_locs = [args.args, args._unknown]
+        else:
+            search_locs = [args.args]
 
         has_tests = False
         for search_str in search_strs:

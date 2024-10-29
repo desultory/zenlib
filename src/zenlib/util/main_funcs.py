@@ -2,7 +2,7 @@
 Functions to help with the main()
 """
 
-__version__ = "1.3.0"
+__version__ = "1.3.1"
 __author__ = "desultory"
 
 
@@ -63,7 +63,8 @@ def process_args(argparser, logger=None, strict=False):
         args = argparser.parse_args()
     else:
         args, unknown = argparser.parse_known_args()
-        args._unknown = unknown
+        if unknown:
+            args._unknown = unknown
 
     if 'version' in args and args.version and argparser.prog != "zenlib_test":
         package = argparser.prog

@@ -34,12 +34,13 @@ def log_init(self, args, kwargs):
     if kwargs:
         logger.debug("[%s] Init kwargs: %s" % (class_name, kwargs))
 
-    from importlib.metadata import version
+    from importlib.metadata import version, PackageNotFoundError
     package_name = self.__module__.split(".")[0]
     try:
         logger.info("[%s] Package version: %s" % (package_name, version(package_name)))
-    except NameError:
-        logger.debug("[%s] Package version not found for: %s" % (class_name, package_name))
+    except (NameError, PackageNotFoundError) as ex:
+        if ex.msg != "No package metadata was found for builtins":
+            logger.debug("[%s] Package version not found for: %s" % (class_name, package_name))
 
     from sys import modules
     if module_version := getattr(modules.get(self.__module__), '__version__', None):

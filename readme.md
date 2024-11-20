@@ -26,7 +26,7 @@ Like @loggify but meant to be used as a base class
 
 ### log_call
 
-Decorator for methods, logs calls and args. Log level adjustable by chaning `log_level`.
+Decorator for methods, logs calls and args. Log level adjustable by changing `log_level`.
 
 ### ColorLognameFormatter
 

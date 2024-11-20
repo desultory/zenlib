@@ -1,11 +1,9 @@
 __author__ = "desultory"
-__version__ = "2.3.1"
+__version__ = "2.4.0"
 
-from .colorlognameformatter import ColorLognameFormatter
-from .utils import _logger_has_handler
+from .utils import add_handler_if_not_exists, log_init
 
-from logging import Logger, getLogger, StreamHandler
-from sys import modules
+from logging import Logger, getLogger
 
 
 def loggify(cls):
@@ -19,27 +17,10 @@ def loggify(cls):
             self.logger.setLevel(self.logger.parent.level + kwargs.pop('_log_bump', 0))
 
             # Add a colored stream handler if one does not exist
-            if not _logger_has_handler(self.logger):
-                color_stream_handler = StreamHandler()
-                color_stream_handler.setFormatter(ColorLognameFormatter(fmt='%(levelname)s | %(name)-42s | %(message)s'))
-                self.logger.addHandler(color_stream_handler)
-                self.logger.info("Adding default handler: %s" % self.logger)
+            add_handler_if_not_exists(self.logger)
 
             # Log class init if _log_init is passed
-            if kwargs.pop('_log_init', False) is True:
-                self.logger.info("Intializing class: %s" % cls.__name__)
-                self.logger.debug("Log level: %s" % self.logger.level)
-
-                if args:
-                    self.logger.debug("Args: %s" % repr(args))
-                if kwargs:
-                    self.logger.debug("Kwargs: %s" % repr(kwargs))
-                if module_version := getattr(modules[cls.__module__], '__version__', None):
-                    self.logger.info("Module version: %s" % module_version)
-                if class_version := getattr(cls, '__version__', None):
-                    self.logger.info("Class version: %s" % class_version)
-            else:
-                self.logger.log(5, "Init debug logging disabled for: %s" % cls.__name__)
+            log_init(self, args, kwargs, cls)
 
             super().__init__(*args, **kwargs)
 

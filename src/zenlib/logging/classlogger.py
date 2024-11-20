@@ -1,42 +1,25 @@
 __author__ = "desultory"
-__version__ = "2.0.1"
+__version__ = "2.1.0"
 
-from .colorlognameformatter import ColorLognameFormatter
-from .utils import _logger_has_handler
+from .utils import add_handler_if_not_exists, log_init
 
-from logging import Logger, getLogger, StreamHandler
-from sys import modules
+from logging import Logger, getLogger
 
 
 class ClassLogger:
-    def __init__(self, logger=None, _log_bump=0, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         # Get the parent logger from the root if one was not passed
-        parent_logger = logger if isinstance(logger, Logger) else getLogger()
+        parent_logger = kwargs.pop('logger') if isinstance(kwargs.get('logger'), Logger) else getLogger()
         # Get a child logger from the parent logger, set self.logger
         self.logger = parent_logger.getChild(self.__class__.__name__)
         # Bump the log level if _log_bump is passed
-        self.logger.setLevel(self.logger.parent.level + _log_bump)
+        self.logger.setLevel(self.logger.parent.level + kwargs.pop('_log_bump', 0))
 
         # Add a colored stream handler if one does not exist
-        if not _logger_has_handler(self.logger):
-            color_stream_handler = StreamHandler()
-            color_stream_handler.setFormatter(ColorLognameFormatter(fmt='%(levelname)s | %(name)-42s | %(message)s'))
-            self.logger.addHandler(color_stream_handler)
-            self.logger.info("Adding default handler: %s" % self.logger)
+        add_handler_if_not_exists(self.logger)
 
         # Log class init if _log_init is passed
-        if kwargs.pop('_log_init', True) is True:
-            self.logger.info("Intializing class: %s" % self.__class__.__name__)
-            self.logger.debug("Log level: %s" % self.logger.level)
-
-            if args:
-                self.logger.debug("Args: %s" % repr(args))
-            if kwargs:
-                self.logger.debug("Kwargs: %s" % repr(kwargs))
-            if module_version := getattr(modules[self.__module__], '__version__', None):
-                self.logger.info("Module version: %s" % module_version)
-        else:
-            self.logger.log(5, "Init debug logging disabled for: %s" % self.__class__.__name__)
+        log_init(self, args, kwargs)
 
         if super().__class__.__class__ is not type:
             super().__init__(*args, **kwargs)

@@ -50,8 +50,11 @@ class TestLogging(TestCase):
         test_class = TestClass(logger=test_logger, _log_init=True)
         self.assertTrue(hasattr(test_class, "logger"))
         self.assertIn("INFO: Initializing class: TestClass", test_handler.records)
-        self.assertIn("DEBUG: [TestClass] Package version not found for: tests", test_handler.records)
         self.assertIn("INFO: [TestClass] Class version: 1.2.3", test_handler.records)
+        # The package name depends on where tests are run from
+        package_name = __name__.split(".")[0]
+        self.assertIn(f"DEBUG: [TestClass] Package version not found for: {package_name}", test_handler.records)
+
 
 
 if __name__ == "__main__":

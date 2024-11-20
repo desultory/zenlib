@@ -20,9 +20,9 @@ def add_handler_if_not_exists(logger):
     logger.addHandler(color_stream_handler)
     logger.info("Added default handler to logger: %s", logger)
 
-def log_init(self, args, kwargs, cls=None):
+def log_init(self, args, kwargs):
     """ If _log_init is in the kwargs and set to True, logs init args, kwargs, class name, and version"""
-    class_name = cls.__name__ if cls else self.__class__.__name__
+    class_name = self.__class__.__name__
     logger = self.logger
     if not kwargs.pop("_log_init", False):
         return logger.debug("Init logging disabled for class: %s", class_name)
@@ -45,12 +45,7 @@ def log_init(self, args, kwargs, cls=None):
     except NameError:
         logger.debug("[%s] Package version not found for: %s" % (class_name, package_name))
 
-    if not cls:  # Only attempt to get the version from the class if it's passed
-        if class_version := getattr(self, '__version__', None):
-            logger.info("[%s] Class version: %s" % (class_name, class_version))
-        return
-
-    if class_version := getattr(cls, '__version__', None):
+    if class_version := getattr(self, '__version__', None):
         logger.info("[%s] Class version: %s" % (class_name, class_version))
 
 def log_setattr(self, name, value):

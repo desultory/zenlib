@@ -20,7 +20,7 @@ def loggify(cls):
             add_handler_if_not_exists(self.logger)
 
             # Log class init if _log_init is passed
-            log_init(self, args, kwargs, cls)
+            log_init(self, args, kwargs)
 
             # Add setattr logging
             setattr(self, "__setattr__", log_setattr)

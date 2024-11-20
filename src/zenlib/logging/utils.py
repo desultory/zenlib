@@ -38,6 +38,9 @@ def log_init(self, args, kwargs, cls=None):
     if module_version := getattr(modules.get(cls.__module__), '__version__', None):
         logger.info("[%s] Module version: %s" % (class_name,module_version))
 
+    if not cls:  # Only attempt to get the version from the class if it's passed
+        return
+
     if class_version := getattr(cls, '__version__', None):
         logger.info("[%s] Class version: %s" % (class_name, class_version))
 

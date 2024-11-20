@@ -1,18 +1,11 @@
 __author__ = "desultory"
-__version__ = "2.0.0"
+__version__ = "2.0.1"
 
 from .colorlognameformatter import ColorLognameFormatter
+from .utils import _logger_has_handler
 
 from logging import Logger, getLogger, StreamHandler
 from sys import modules
-
-
-def _has_handler(logger):
-    while logger:
-        if logger.handlers:
-            return True
-        logger = logger.parent
-    return False
 
 
 class ClassLogger:
@@ -25,7 +18,7 @@ class ClassLogger:
         self.logger.setLevel(self.logger.parent.level + _log_bump)
 
         # Add a colored stream handler if one does not exist
-        if not _has_handler(self.logger):
+        if not _logger_has_handler(self.logger):
             color_stream_handler = StreamHandler()
             color_stream_handler.setFormatter(ColorLognameFormatter(fmt='%(levelname)s | %(name)-42s | %(message)s'))
             self.logger.addHandler(color_stream_handler)

@@ -1,20 +1,14 @@
 __author__ = "desultory"
-__version__ = "2.3.0"
+__version__ = "2.3.1"
 
 from .colorlognameformatter import ColorLognameFormatter
+from .utils import _logger_has_handler
 
 from logging import Logger, getLogger, StreamHandler
 from sys import modules
 
 
 def loggify(cls):
-    def _has_handler(logger):
-        while logger:
-            if logger.handlers:
-                return True
-            logger = logger.parent
-        return False
-
     class ClassLogger(cls):
         def __init__(self, *args, **kwargs):
             # Get the parent logger from the root if one was not passed
@@ -25,7 +19,7 @@ def loggify(cls):
             self.logger.setLevel(self.logger.parent.level + kwargs.pop('_log_bump', 0))
 
             # Add a colored stream handler if one does not exist
-            if not _has_handler(self.logger):
+            if not _logger_has_handler(self.logger):
                 color_stream_handler = StreamHandler()
                 color_stream_handler.setFormatter(ColorLognameFormatter(fmt='%(levelname)s | %(name)-42s | %(message)s'))
                 self.logger.addHandler(color_stream_handler)

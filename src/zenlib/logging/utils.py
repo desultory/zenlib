@@ -46,6 +46,8 @@ def log_init(self, args, kwargs, cls=None):
         logger.debug("[%s] Package version not found for: %s" % (class_name, package_name))
 
     if not cls:  # Only attempt to get the version from the class if it's passed
+        if class_version := getattr(self, '__version__', None):
+            logger.info("[%s] Class version: %s" % (class_name, class_version))
         return
 
     if class_version := getattr(cls, '__version__', None):

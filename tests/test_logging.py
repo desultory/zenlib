@@ -9,6 +9,11 @@ class TestLogging(TestCase):
         loggified_dict = loggify(dict)()
         self.assertTrue(hasattr(loggified_dict, "logger"))
 
+    def test_log_init(self):
+        """Tests that _log_init as an arg for a loggified class functions"""
+        loggified_dict = loggify(dict)(_log_init=True)
+        self.assertTrue(hasattr(loggified_dict, "logger"))
+
 
 if __name__ == "__main__":
     main()

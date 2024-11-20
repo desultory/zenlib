@@ -1,7 +1,7 @@
 __author__ = "desultory"
 __version__ = "2.4.0"
 
-from .utils import add_handler_if_not_exists, log_init
+from .utils import add_handler_if_not_exists, log_init, log_setattr
 
 from logging import Logger, getLogger
 
@@ -22,20 +22,10 @@ def loggify(cls):
             # Log class init if _log_init is passed
             log_init(self, args, kwargs, cls)
 
+            # Add setattr logging
+            setattr(self, "__setattr__", log_setattr)
+
             super().__init__(*args, **kwargs)
-
-        def __setattr__(self, name, value):
-            """ Add logging to setattr. """
-            super().__setattr__(name, value)
-
-            # Check if the logger is defined
-            if not isinstance(self.logger, Logger):
-                raise ValueError("The logger is not defined")
-
-            if isinstance(value, list) or isinstance(value, dict) or isinstance(value, str) and "\n" in value:
-                self.logger.log(5, "Setattr '%s' to:\n%s" % (name, getattr(self, name)))
-            else:
-                self.logger.log(5, "Setattr '%s' to: %s" % (name, getattr(self, name)))
 
     ClassLogger.__name__ = cls.__name__
     ClassLogger.__module__ = cls.__module__

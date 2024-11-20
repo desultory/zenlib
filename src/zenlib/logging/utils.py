@@ -1,3 +1,5 @@
+from logging import Logger
+
 def _logger_has_handler(logger):
     """ Checks if a logger or its parents has a handler already """
     while logger:
@@ -38,3 +40,16 @@ def log_init(self, args, kwargs, cls=None):
 
     if class_version := getattr(cls, '__version__', None):
         logger.info("[%s] Class version: %s" % (class_name, class_version))
+
+def log_setattr(self, name, value):
+    """ Logs when an attribute is set """
+    super().__setattr__(name, value)
+    # check if the logger is defined
+    if not isinstance(self.logger, Logger):
+        raise ValueError("Logger is not defined")
+
+    # Log containers or strings with newlines on a new line
+    if isinstance(value, list) or isinstance(value, dict) or isinstance(value, str) and "\n" in value:
+        self.logger.log(5, "Setattr '%s' to:\n%s" % (name, getattr(self, name)))
+    else:
+        self.logger.log(5, "Setattr '%s' to: %s" % (name, getattr(self, name)))

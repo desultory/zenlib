@@ -34,16 +34,16 @@ def log_init(self, args, kwargs):
     if kwargs:
         logger.debug("[%s] Init kwargs: %s" % (class_name, kwargs))
 
-    from sys import modules
-    if module_version := getattr(modules.get(self.__module__), '__version__', None):
-        logger.info("[%s] Module version: %s" % (class_name, module_version))
-
     from importlib.metadata import version
     package_name = self.__module__.split(".")[0]
     try:
-        logger.info("[%s] Package version: %s" % (class_name, version(package_name)))
+        logger.info("[%s] Package version: %s" % (package_name, version(package_name)))
     except NameError:
         logger.debug("[%s] Package version not found for: %s" % (class_name, package_name))
+
+    from sys import modules
+    if module_version := getattr(modules.get(self.__module__), '__version__', None):
+        logger.info("[%s] Module version: %s" % (self.__module__, module_version))
 
     if class_version := getattr(self, '__version__', None):
         logger.info("[%s] Class version: %s" % (class_name, class_version))

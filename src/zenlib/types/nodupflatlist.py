@@ -1,19 +1,16 @@
 __author__ = "desultory"
-__version__ = "1.0.0"
+__version__ = "1.1.1"
 
 
-from zenlib.logging import loggify
+from zenlib.logging import ClassLogger
+from zenlib.util import handle_plural
 
-from .handle_plural import handle_plural
 
-
-@loggify
-class NoDupFlatList(list):
+class NoDupFlatList(ClassLogger, list):
     """List that automatically filters duplicate elements when appended and concatenated."""
-
-    def __init__(self, no_warn=False, log_bump=0, *args, **kwargs):
+    def __init__(self, no_warn=False, *args, **kwargs):
+        super().__init__(*args, **kwargs)
         self.no_warn = no_warn
-        self.logger.setLevel(self.logger.parent.level + log_bump)
 
     @handle_plural
     def append(self, item):

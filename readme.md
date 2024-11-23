@@ -142,33 +142,3 @@ If `key` is a dict, the structure will be used to walk the `validate_dict`.
 * `message` Set the vailidation failure message.
 
 Additional arguments exist to set a value to compare found keys against
-
-## Threading
-
-> This is not being maintained, please don't use it, it's just here because I used to use it.
-
-### ZenThread
-
-An extension of the builtin thread that sets results to self.return_value and exceptions to self.exception.
-
-Supports re-starting and looping with the self.loop event.
-
-### @threaded
-
-Runs the wrapped function in a thread when called.
-
-Adds the thread to `_threads` within the object.
-
-If an exception is raised, it will be added to `self._threads` in the form `(thread, exception_queue)`.
-
-### @thread_wrapped('threadname')
-
-Meant to be used with `@add_thread`, the argument is the threadname that function is associated with.
-
-### @add_thread('threadname', 'target_function', 'description')
-
-`@add_thread` decorates a class, and adds `create_{threadname}_thread`, `start_` and `stop_` functions which are used to handle thread management of a `thread_wrapped` function.
-
-Once added, a thread will be added to `self.threads[threadname]`.
-
-

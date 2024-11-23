@@ -1,6 +1,6 @@
 from unittest import TestCase, main
 
-from zenlib.util import NoDupFlatList
+from zenlib.types import NoDupFlatList
 
 
 class TestNoDupFlatList(TestCase):

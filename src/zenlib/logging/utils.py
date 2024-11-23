@@ -49,6 +49,11 @@ def log_init(self, args, kwargs):
     if class_version := getattr(self, '__version__', None):
         logger.info("[%s] Class version: %s" % (class_name, class_version))
 
+def handle_additional_logging(self, kwargs):
+    """ Sets __setattr__ to log_setattr if _log_setattr is in the kwargs and set to True """
+    if kwargs.pop("_log_setattr", False):
+        setattr(self, "__setattr__", log_setattr)
+
 def log_setattr(self, name, value):
     """ Logs when an attribute is set """
     super().__setattr__(name, value)

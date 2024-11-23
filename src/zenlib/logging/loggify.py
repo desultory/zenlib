@@ -5,7 +5,7 @@ from logging import Logger, getLogger
 
 from zenlib.util import merge_class
 
-from .utils import add_handler_if_not_exists, log_init, log_setattr
+from .utils import add_handler_if_not_exists, log_init, handle_additional_logging
 
 
 def loggify(cls):
@@ -24,9 +24,8 @@ def loggify(cls):
             # Log class init if _log_init is passed
             log_init(self, args, kwargs)
 
-            if kwargs.pop("_log_setattr", False):
-                # Add setattr logging
-                setattr(self, "__setattr__", log_setattr)
+            # Add logging to _log_setattr if set
+            handle_additional_logging(self, kwargs)
 
             super().__init__(*args, **kwargs)
 

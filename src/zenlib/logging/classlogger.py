@@ -1,7 +1,7 @@
 __author__ = "desultory"
-__version__ = "2.1.2"
+__version__ = "2.2.0"
 
-from .utils import add_handler_if_not_exists, log_init, log_setattr
+from .utils import add_handler_if_not_exists, log_init, handle_additional_logging
 
 from logging import Logger, getLogger
 
@@ -21,10 +21,8 @@ class ClassLogger:
         # Log class init if _log_init is passed
         log_init(self, args, kwargs)
 
-
-        if kwargs.pop('_log_setattr', False):
-            # add setattr logging
-            setattr(self, "__setattr__", log_setattr)
+        # Add logging to _log_setattr if set
+        handle_additional_logging(self, kwargs)
 
         if super().__class__.__class__ is not type:
             super().__init__(*args, **kwargs)

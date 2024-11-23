@@ -1,5 +1,5 @@
 __author__ = "desultory"
-__version__ = "2.1.0"
+__version__ = "2.2.0"
 
 from collections.abc import KeysView, ValuesView
 
@@ -11,7 +11,7 @@ def handle_plural(function, log_level=10):
     Logs using the logger attribute if it exists.
     """
 
-    def wrapper(self, *args):
+    def wrapper(self, *args, **kwargs):
         def log(msg, level=log_level):
             if hasattr(self, "logger"):
                 self.logger.log(level, msg)
@@ -26,15 +26,15 @@ def handle_plural(function, log_level=10):
         if isinstance(focus_arg, list) and not isinstance(focus_arg, str):
             log("Expanding list: %s" % focus_arg)
             for item in focus_arg:
-                function(self, *(other_args + (item,)))
+                function(self, *(other_args + (item,)), **kwargs)
         elif isinstance(focus_arg, ValuesView):
             log("Expanding dict values: %s" % focus_arg)
             for value in focus_arg:
-                function(self, *(other_args + (value,)))
+                function(self, *(other_args + (value,)), **kwargs)
         elif isinstance(focus_arg, KeysView):
             log("Expanding dict keys: %s" % focus_arg)
             for key in focus_arg:
-                function(self, *(other_args + (key,)))
+                function(self, *(other_args + (key,)), **kwargs)
         elif isinstance(focus_arg, dict):
             log("Expanding dict: %s" % focus_arg)
             for key, value in focus_arg.items():
@@ -47,9 +47,10 @@ def handle_plural(function, log_level=10):
                             value,
                         )
                     ),
+                    **kwargs,
                 )
         else:
             log(f"Arguments were not expanded: {args}", log_level - 5)
-            return function(self, *args)
+            return function(self, *args, **kwargs)
 
     return wrapper

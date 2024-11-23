@@ -10,11 +10,35 @@ class TestHandlePlural(TestCase):
             self._test_data += iterated
         return iterated
 
+    @handle_plural
+    def _test_plural_ints_with_kwarg(self, arg_a, iterated, test_kwarg='asdf'):
+        self.assertEqual(test_kwarg, 'asdf')
+        if isinstance(iterated, int):
+            self._test_data += iterated
+        return iterated
+
+    @handle_plural
+    def _test_plural_setting_kwarg(self, arg_a, iterated, test_kwarg='asdf'):
+        self.assertEqual(test_kwarg, 'test')
+        if isinstance(iterated, int):
+            self._test_data += iterated
+        return iterated
+
     def test_list(self):
         self._test_data = 0
         test_list = [1, 2, 3, 4]
         extra_arg = 'a'
         self.assertEqual(self._test_plural_ints(extra_arg, test_list), None)
+        self.assertEqual(self._test_data, sum(test_list))
+        self._test_data = 0
+        self.assertEqual(self._test_plural_ints_with_kwarg(extra_arg, test_list), None)
+        self.assertEqual(self._test_data, sum(test_list))
+
+    def test_setting_kwarg(self):
+        self._test_data = 0
+        test_list = [1, 2, 3, 4]
+        extra_arg = 'a'
+        self.assertEqual(self._test_plural_setting_kwarg(extra_arg, test_list, test_kwarg='test'), None)
         self.assertEqual(self._test_data, sum(test_list))
 
     def test_single(self):  # non-iterables should allow returns

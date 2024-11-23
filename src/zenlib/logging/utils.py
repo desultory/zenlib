@@ -25,7 +25,7 @@ def log_init(self, args, kwargs):
     class_name = self.__class__.__name__
     logger = self.logger
     if not kwargs.pop("_log_init", False):
-        return logger.debug("Init logging disabled for class: %s", class_name)
+        return logger.log(5, "Init logging disabled for class: %s", class_name)
 
     logger.info("Initializing class: %s", class_name)
 

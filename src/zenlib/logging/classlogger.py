@@ -1,5 +1,5 @@
 __author__ = "desultory"
-__version__ = "2.1.0"
+__version__ = "2.1.1"
 
 from .utils import add_handler_if_not_exists, log_init, log_setattr
 
@@ -26,9 +26,3 @@ class ClassLogger:
 
         if super().__class__.__class__ is not type:
             super().__init__(*args, **kwargs)
-
-    def __setitem__(self, name, value):
-        """ Add logging to dict setitem. """
-        if hasattr(super(), '__setitem__'):
-            super().__setitem__(name, value)
-            self.logger.log(5, "Setitem '%s' to: %s" % (name, value))

@@ -1,5 +1,5 @@
 __author__ = "desultory"
-__version__ = "1.1.0"
+__version__ = "1.1.1"
 
 
 from zenlib.logging import ClassLogger
@@ -8,10 +8,7 @@ from zenlib.util import handle_plural
 
 class NoDupFlatList(ClassLogger, list):
     """List that automatically filters duplicate elements when appended and concatenated."""
-
     def __init__(self, no_warn=False, *args, **kwargs):
-        if log_bump := kwargs.pop("log_bump", 0):
-            kwargs["_log_bump"] = log_bump
         super().__init__(*args, **kwargs)
         self.no_warn = no_warn
 

@@ -1,5 +1,5 @@
 __author__ = "desultory"
-__version__ = "2.4.0"
+__version__ = "2.4.2"
 
 from .utils import add_handler_if_not_exists, log_init, log_setattr
 
@@ -22,8 +22,9 @@ def loggify(cls):
             # Log class init if _log_init is passed
             log_init(self, args, kwargs)
 
-            # Add setattr logging
-            setattr(self, "__setattr__", log_setattr)
+            if kwargs.pop('_log_setattr', False):
+                # Add setattr logging
+                setattr(self, "__setattr__", log_setattr)
 
             super().__init__(*args, **kwargs)
 

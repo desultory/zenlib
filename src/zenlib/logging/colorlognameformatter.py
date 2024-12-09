@@ -1,5 +1,5 @@
 __author__ = "desultory"
-__version__ = "3.0.0"
+__version__ = "3.0.1"
 
 from logging import Formatter
 
@@ -21,7 +21,7 @@ class ColorLognameFormatter(Formatter):
 
     def __init__(self, fmt="%(levelname)s | %(message)s", *args, **kwargs):
         super().__init__(fmt, *args, **kwargs)
-        self.level_str_width = max(len(name) for name in self.level_colors) - 1
+        self.level_str_width = max(len(name) for name in self.level_colors)
 
     def format(self, record):
         # When calling format, replace the levelname with a colored version

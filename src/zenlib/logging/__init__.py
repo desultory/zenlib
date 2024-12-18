@@ -1,6 +1,7 @@
 from .colorlognameformatter import ColorLognameFormatter
-from .loggify import loggify
-from .log_call import log_call
 from .classlogger import ClassLogger
+from .loggify import loggify
+from .loggermixin import LoggerMixIn
+from .log_call import log_call
 
-__all__ = ['ColorLognameFormatter', 'loggify', 'log_call', 'ClassLogger']
+__all__ = ["ColorLognameFormatter", "loggify", "LoggerMixIn", "log_call", "ClassLogger"]

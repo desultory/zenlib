@@ -1,9 +1,7 @@
 __author__ = "desultory"
-__version__ = "3.0.1"
+__version__ = "3.1.0"
 
 from logging import Formatter
-
-from zenlib.util import colorize
 
 
 class ColorLognameFormatter(Formatter):
@@ -12,7 +10,7 @@ class ColorLognameFormatter(Formatter):
     Normal levelnames are padded to the length of the longest levelname."""
 
     level_colors = {
-        "DEBUG": {"color": "white"},
+        "DEBUG": {"color": "white", "bright": True},
         "INFO": {"color": "blue"},
         "WARNING": {"color": "yellow"},
         "ERROR": {"color": "red", "bold": True},
@@ -26,6 +24,8 @@ class ColorLognameFormatter(Formatter):
     def format(self, record):
         # When calling format, replace the levelname with a colored version
         # Note: the string size is greatly increased because of the color codes
+        from zenlib.util import colorize
+
         old_levelname = record.levelname
         color_info = self.level_colors.get(record.levelname, {"color": "white"})
         record.levelname = colorize(record.levelname.ljust(self.level_str_width), **color_info)

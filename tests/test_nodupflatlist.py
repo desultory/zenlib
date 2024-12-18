@@ -4,6 +4,10 @@ from zenlib.types import NoDupFlatList
 
 
 class TestNoDupFlatList(TestCase):
+    def test_util_import(self):
+        from zenlib.util import NoDupFlatList as NDFL
+        self.assertEqual(NoDupFlatList, NDFL)
+
     def test_dedup1(self):
         test_list = NoDupFlatList(no_warn=True)
         test_list += 1

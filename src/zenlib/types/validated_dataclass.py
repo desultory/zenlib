@@ -1,11 +1,11 @@
 from dataclasses import dataclass
 from typing import get_type_hints
 
-from zenlib.util import merge_class
-from zenlib.logging import loggify
-
 
 def validatedDataclass(cls):
+    from zenlib.logging import loggify
+    from zenlib.util import merge_class
+
     cls = loggify(dataclass(cls))
 
     class ValidatedDataclass(cls):
@@ -28,5 +28,5 @@ def validatedDataclass(cls):
                     raise TypeError(f"[{attribute}] Type mismatch: '{expected_type}' != {type(value)}")
             return value
 
-    merge_class(cls, ValidatedDataclass, ignored_attributes = ["__setattr__"])
+    merge_class(cls, ValidatedDataclass, ignored_attributes=["__setattr__"])
     return ValidatedDataclass

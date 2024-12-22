@@ -1,9 +1,9 @@
-__version__ = "0.1.0"
+__version__ = "0.1.1"
 
 from enum import Enum
 
-
 ANSI_START = "\x1b["
+
 
 class Colors(Enum):
     RED = 31
@@ -28,6 +28,6 @@ class ANSICode:
         return f"{ANSI_START}{color_code}{bold_str}m"
 
 
-def colorize(text: str, color: str, bright=False, bold=False) -> str:
+def colorize(text: str, color="white", bright=False, bold=False) -> str:
     color_code = Colors[color.upper()].value
     return f"{ANSICode(color_code, bright, bold)}{text}{ANSICode(0)}"

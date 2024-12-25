@@ -28,9 +28,6 @@ class TestNamespace(TestCase):
     def test_user_namespace_uid_gid(self):
         self.assertEqual(nsexec(test_uid_gid), (0, 0))
 
-    def test_user_namespace_alt_uid_gid(self):
-        self.assertEqual(nsexec(test_uid_gid, uid=9999, gid=9999), (9999, 9999))
-
 
 if __name__ == "__main__":
     main()

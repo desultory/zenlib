@@ -20,17 +20,16 @@ def get_id_map(username=None, id_type="uid"):
     raise ValueError(f"User {username} not found in /etc/sub{id_type}")
 
 
-def new_id_map(id_type, pid, id, nsid, count=2**16):
+def new_id_map(id_type, pid, id, nsid, count=2**16, failures=0):
     if id_type not in ("uid", "gid"):
         raise ValueError("id_type must be 'uid' or 'gid")
     args = [f"new{id_type}map", str(pid), str(id), str(nsid), str(count)]
     try:
-        run(args, check=True)
+        return run(args, check=True)
     except CalledProcessError as e:
-        print(f"Error: {e}")
-        print(f"Stderr: {e.stderr}")
-        print(f"Stdout: {e.stdout}")
-        raise e
+        if failures > 5:
+            raise e
+    new_id_map(id_type, pid, id, nsid, count, failures + 1)
 
 
 class NamespaceProcess(Process):

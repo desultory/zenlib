@@ -1,8 +1,6 @@
 from os import environ
 from unittest import TestCase, main, skipIf
 
-
-
 from zenlib.util import nsexec
 
 
@@ -13,12 +11,16 @@ class TestPassedException(Exception):
 def test_exception():
     raise TestPassedException("This is a test exception")
 
+
 def test_add_func(a, b):
     return a + b
 
+
 def test_uid_gid():
     import os
+
     return os.getuid(), os.getgid()
+
 
 class TestNamespace(TestCase):
     @skipIf(environ.get("CI") == "true", "Skipping test_namespace.py in CI")

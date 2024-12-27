@@ -24,7 +24,7 @@ def new_id_map(id_type, pid, id, nsid, count=1, *args, failures=0):
         raise ValueError("id_type must be 'uid' or 'gid")
     cmd_args = [f"new{id_type}map", str(pid), str(id), str(nsid), str(count), *map(str, args)]
     try:
-        return run(cmd_args, check=True)
+        return run(cmd_args, check=True, capture_output=True)
     except CalledProcessError as e:
         if failures > 5:
             raise e

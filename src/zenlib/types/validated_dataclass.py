@@ -1,12 +1,17 @@
 from dataclasses import dataclass
-from typing import get_type_hints
 
 
 def validatedDataclass(cls):
     from zenlib.logging import loggify
     from zenlib.util import merge_class
 
+
     cls = loggify(dataclass(cls))
+    base_annotations = {}
+    for base in cls.__mro__:
+        base_annotations.update(getattr(base, "__annotations__", {}))
+
+    cls.__annotations__.update(base_annotations)
 
     class ValidatedDataclass(cls):
         def __setattr__(self, attribute, value):
@@ -20,7 +25,9 @@ def validatedDataclass(cls):
             if value is None:
                 return
 
-            expected_type = get_type_hints(self.__class__)[attribute]
+            expected_type = self.__class__.__annotations__.get(attribute)
+            if not expected_type:
+                return value  # No type hint, so we can't validate it
             if not isinstance(value, expected_type):
                 try:
                     value = expected_type(value)

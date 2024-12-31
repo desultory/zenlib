@@ -1,7 +1,24 @@
 from os import environ
+from platform import system
+from sys import version_info
 from unittest import TestCase, main, skipIf
 
 from zenlib.namespace import nsexec
+
+
+def check_test_compat():
+    """Checks if tests are compatible with the current environment"""
+
+    if environ.get("CI", "false").lower() == "true":
+        return
+
+    if system() != "Linux":
+        return
+
+    if version_info < (3, 12):
+        return
+
+    return True
 
 
 class TestPassedException(Exception):
@@ -32,25 +49,21 @@ def test_cwd():
     return [p for p in Path("/").rglob("")]
 
 
+@skipIf(not check_test_compat(), "Skipping test_namespace.py in CI")
 class TestNamespace(TestCase):
-    @skipIf(environ.get("CI") == "true", "Skipping test_namespace.py in CI")
     def test_user_namespace_exceptions(self):
         with self.assertRaises(TestPassedException):
             nsexec(test_exception)
 
-    @skipIf(environ.get("CI") == "true", "Skipping test_namespace.py in CI")
     def test_user_namespace_func(self):
         self.assertEqual(nsexec(test_add_func, 1, 2), 3)
 
-    @skipIf(environ.get("CI") == "true", "Skipping test_namespace.py in CI")
     def test_user_namespace_kwargs(self):
         self.assertEqual(nsexec(test_add_kwargs, 1, 2, add1=3, add2=4), 7)
 
-    @skipIf(environ.get("CI") == "true", "Skipping test_namespace.py in CI")
     def test_user_namespace_uid_gid(self):
         self.assertEqual(nsexec(test_uid_gid), (0, 0))
 
-    @skipIf(environ.get("CI") == "true", "Skipping test_namespace.py in CI")
     def test_user_namespace_chroot(self):
         from pathlib import Path
         from tempfile import TemporaryDirectory

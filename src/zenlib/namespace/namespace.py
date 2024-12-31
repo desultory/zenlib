@@ -11,6 +11,9 @@ def get_id_map(username=None, id_type="uid"):
     if id_type not in ("uid", "gid"):
         raise ValueError("id_type must be 'uid' or 'gid'")
 
+    if getuid() == 0:
+        return 100000, 65536  # Not usre about this, unshare --map-auto --map-root seems to do this if run as root
+
     with open(f"/etc/sub{id_type}") as f:
         for line in f:
             if line.startswith(f"{username}:"):

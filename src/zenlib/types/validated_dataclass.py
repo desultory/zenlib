@@ -1,10 +1,10 @@
 from dataclasses import dataclass
+from typing import ForwardRef, Union, get_args, get_origin, get_type_hints
 
 
 def validatedDataclass(cls):
     from zenlib.logging import loggify
     from zenlib.util import merge_class
-
 
     cls = loggify(dataclass(cls))
     base_annotations = {}
@@ -28,6 +28,9 @@ def validatedDataclass(cls):
             expected_type = self.__class__.__annotations__.get(attribute)
             if not expected_type:
                 return value  # No type hint, so we can't validate it
+            if get_origin(expected_type) is Union and isinstance(get_args(expected_type)[0], ForwardRef):
+                expected_type = get_type_hints(self.__class__)[attribute]
+
             if not isinstance(value, expected_type):
                 try:
                     value = expected_type(value)

@@ -1,5 +1,5 @@
 from multiprocessing import Event, Pipe, Process, Queue
-from os import chroot, getgid, getlogin, getuid, setgid, setuid
+from os import chroot, chdir, getgid, getlogin, getuid, setgid, setuid
 
 from .namespace import get_id_map, new_id_map, unshare_namespace
 
@@ -37,6 +37,7 @@ class NamespaceProcess(Process):
         setuid(0)
         setgid(0)
         chroot(self.target_root)
+        chdir("/")
         try:
             self.function_queue.put(self._target(*self._args, **self._kwargs))
         except Exception as e:

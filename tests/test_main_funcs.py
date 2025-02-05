@@ -1,8 +1,8 @@
-from argparse import ArgumentParser, Namespace
+from argparse import Namespace
 from logging import Logger
 from unittest import TestCase, expectedFailure, main
 
-from zenlib.util import get_args_n_logger, get_kwargs, get_kwargs_from_args, init_argparser, init_logger
+from zenlib.util import get_args_n_logger, get_kwargs, get_kwargs_from_args, init_logger
 from zenlib.util.main_funcs import dump_args_for_autocomplete, get_base_args
 
 DEFAULT_ARGS = ["debug", "trace", "log_time", "no_log_color"]
@@ -17,14 +17,6 @@ def get_test_args():
 class TestMainFuncs(TestCase):
     def test_init_logger(self):
         self.assertIsInstance(init_logger(), Logger)
-
-    def test_init_argparser(self):
-        self.assertIsInstance(init_argparser(), ArgumentParser)
-
-    def test_named_init_argparser(self):
-        parser = init_argparser("test", "test description")
-        self.assertEqual(parser.prog, "test")
-        self.assertEqual(parser.description, "test description")
 
     def _check_for_test_args(self, args):
         self.assertIsInstance(args, Namespace)

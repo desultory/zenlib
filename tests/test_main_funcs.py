@@ -2,7 +2,7 @@ from argparse import Namespace
 from logging import Logger
 from unittest import TestCase, expectedFailure, main
 
-from zenlib.util import get_args_n_logger, get_kwargs, get_kwargs_from_args, init_logger
+from zenlib.util import get_args_n_logger, get_kwargs, get_kwargs_from_args
 from zenlib.util.main_funcs import dump_args_for_autocomplete, get_base_args
 
 DEFAULT_ARGS = ["debug", "trace", "log_time", "no_log_color"]
@@ -15,17 +15,14 @@ def get_test_args():
 
 
 class TestMainFuncs(TestCase):
-    def test_init_logger(self):
-        self.assertIsInstance(init_logger(), Logger)
-
     def _check_for_test_args(self, args):
         self.assertIsInstance(args, Namespace)
 
-        if 'discover' not in args.args:
+        if "discover" not in args.args:
             self.fail("discover not found in args")
 
-        search_strs = ['tests', './tests']
-        if '_unknown' in args:
+        search_strs = ["tests", "./tests"]
+        if "_unknown" in args:
             search_locs = [args.args, args._unknown]
         else:
             search_locs = [args.args]
@@ -44,7 +41,9 @@ class TestMainFuncs(TestCase):
         self._check_for_test_args(args)
 
     def test_get_args_n_logger_no_default(self):
-        args, logger = get_args_n_logger("zenlib_test", "test description", get_test_args(), strict=False, drop_default=True)
+        args, logger = get_args_n_logger(
+            "zenlib_test", "test description", get_test_args(), strict=False, drop_default=True
+        )
         self.assertIsInstance(logger, Logger)
 
         for arg in DEFAULT_ARGS:

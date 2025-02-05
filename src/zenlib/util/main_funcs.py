@@ -2,7 +2,7 @@
 Functions to help with the main()
 """
 
-__version__ = "1.4.0"
+__version__ = "1.4.1"
 
 from argparse import ArgumentError, ArgumentParser, Namespace
 from importlib.metadata import version
@@ -20,12 +20,6 @@ def get_base_args():
         {"flags": ["--log-time"], "action": "store_true", "help": "enable log timestamps"},
         {"flags": ["--no-log-color"], "action": "store_true", "help": "disable log color"},
     ]
-
-
-def init_logger(name=None):
-    """Initialize the logger with a name"""
-    name = name or __name__
-    return getLogger(name)
 
 
 def get_kwargs_from_args(args, logger=None, base_kwargs={}, drop_base=True):
@@ -123,7 +117,7 @@ def get_args_n_logger(package, description: str, arguments=[], drop_default=Fals
         dump_args_for_autocomplete(all_arguments)
 
     argparser = ArgumentParser(prog=package, description=description)
-    logger = init_logger(package)
+    logger = getLogger(package)
 
     def add_args(args, argparser):
         for arg in args:

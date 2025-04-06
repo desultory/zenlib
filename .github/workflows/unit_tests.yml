@@ -19,6 +19,12 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+    - name: Permit unprivileged user namespaces
+      run: |
+        set -x
+        sudo sysctl -w kernel.apparmor_restrict_unprivileged_unconfined=0
+        sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
+
     - name: Set up Python ${{ matrix.python-version }}
       uses: actions/setup-python@v3
       with:

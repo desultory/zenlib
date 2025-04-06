@@ -1,4 +1,3 @@
-from os import environ
 from platform import system
 from sys import version_info
 from unittest import TestCase, main, skipIf
@@ -8,10 +7,6 @@ from zenlib.namespace import nsexec
 
 def check_test_compat():
     """Checks if tests are compatible with the current environment"""
-
-    if environ.get("CI", "false").lower() == "true":
-        return
-
     if system() != "Linux":
         return
 

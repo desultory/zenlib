@@ -41,7 +41,7 @@ def test_uid_gid():
 def test_cwd():
     from pathlib import Path
 
-    return [p for p in Path("/").rglob("")]
+    return [p.resolve() for p in Path("/").rglob("")]
 
 
 @skipIf(not check_test_compat(), "Skipping test_namespace.py in CI")

@@ -1,5 +1,6 @@
 from multiprocessing import Event, Pipe, Process, Queue
-from os import chroot, chdir, getgid, getlogin, getuid, setgid, setuid
+from os import chroot, chdir, getgid, getuid, setgid, setuid
+from getpass import getuser
 
 from .namespace import get_id_map, new_id_map, unshare_namespace
 
@@ -11,7 +12,7 @@ class NamespaceProcess(Process):
 
     def __init__(self, target=None, args=None, kwargs=None, **ekwargs):
         self.target_root = kwargs.pop("target_root", "/")
-        namespace_user = kwargs.pop("namespace_user", getlogin())
+        namespace_user = kwargs.pop("namespace_user", getuser())
         self.subuid_start, self.subuid_count = get_id_map(namespace_user, "uid")
         self.subgid_start, self.subgid_count = get_id_map(namespace_user, "gid")
         self.orig_uid = getuid()

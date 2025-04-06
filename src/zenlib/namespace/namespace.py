@@ -1,4 +1,5 @@
-from os import CLONE_NEWNS, CLONE_NEWUSER, getlogin, unshare, getuid
+from os import CLONE_NEWNS, CLONE_NEWUSER, unshare, getuid
+from getpass import getuser
 from subprocess import CalledProcessError, run
 
 
@@ -7,7 +8,7 @@ def unshare_namespace():
 
 
 def get_id_map(username=None, id_type="uid"):
-    username = username or getlogin()
+    username = username or getuser()
     if id_type not in ("uid", "gid"):
         raise ValueError("id_type must be 'uid' or 'gid'")
 

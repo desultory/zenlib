@@ -2,8 +2,12 @@
 Functions to help with the main()
 """
 
-__version__ = "1.3.1"
-__author__ = "desultory"
+__version__ = "1.4.1"
+
+from argparse import ArgumentError, ArgumentParser, Namespace
+from importlib.metadata import version
+from logging import FileHandler, Formatter, StreamHandler, getLogger
+from sys import argv
 
 
 def get_base_args():
@@ -18,25 +22,11 @@ def get_base_args():
     ]
 
 
-def init_logger(name=None):
-    """Initialize the logger with a name"""
-    from logging import getLogger
-
-    name = name or __name__
-    return getLogger(name)
-
-
-def init_argparser(prog=None, description=None):
-    """Initialize an argparser with common options."""
-    from argparse import ArgumentParser
-
-    argparser = ArgumentParser(prog=prog, description=description)
-    return argparser
-
-
 def get_kwargs_from_args(args, logger=None, base_kwargs={}, drop_base=True):
     """Get kwargs from argparser args.
-    Drop base doesn't add init_argparser args."""
+    Drop base doesn't add args defined in get_base_args.
+    Empty args are not added to kwargs.
+    """
     kwargs = base_kwargs.copy()
     if logger is not None:
         kwargs["logger"] = logger
@@ -55,8 +45,6 @@ def get_kwargs_from_args(args, logger=None, base_kwargs={}, drop_base=True):
 
 def process_args(argparser, logger=None, strict=False):
     """Process argparser args, optionally configuring a logger."""
-    from logging import Formatter
-
     from zenlib.logging import ColorLognameFormatter
 
     if strict:
@@ -66,9 +54,8 @@ def process_args(argparser, logger=None, strict=False):
         if unknown:
             args._unknown = unknown
 
-    if 'version' in args and args.version and argparser.prog != "zenlib_test":
+    if "version" in args and args.version and argparser.prog != "zenlib_test":
         package = argparser.prog
-        from importlib.metadata import version
 
         print(f"{package} {version(package)}")
         exit(0)
@@ -96,13 +83,11 @@ def process_args(argparser, logger=None, strict=False):
             handler.setFormatter(formatter)
             break
         else:
-            from logging import FileHandler, StreamHandler
-
             handler = StreamHandler() if args.log_file is None else FileHandler(args.log_file)
             handler.setFormatter(formatter)
             logger.addHandler(handler)
 
-        if '__unknown' in args and args.__unknown:
+        if "__unknown" in args and args.__unknown:
             logger.warning(f"Unknown args: {args.__unknown}")
 
     return args
@@ -128,13 +113,11 @@ def get_args_n_logger(package, description: str, arguments=[], drop_default=Fals
     Returns the parsed args and logger.
     """
     all_arguments = get_base_args() + arguments
-    from sys import argv
     if "--dump_args" in argv:
         dump_args_for_autocomplete(all_arguments)
 
-    from argparse import Namespace, ArgumentError
-    argparser = init_argparser(prog=package, description=description)
-    logger = init_logger(package)
+    argparser = ArgumentParser(prog=package, description=description)
+    logger = getLogger(package)
 
     def add_args(args, argparser):
         for arg in args:
@@ -157,7 +140,9 @@ def get_args_n_logger(package, description: str, arguments=[], drop_default=Fals
     return args, logger
 
 
-def get_kwargs(package, description: str, arguments=[], base_kwargs={}, drop_default=False, drop_base=True, strict=False):
+def get_kwargs(
+    package, description: str, arguments=[], base_kwargs={}, drop_default=False, drop_base=True, strict=False
+):
     """Like get_args_n_logger, but only returns kwargs"""
     args, logger = get_args_n_logger(package, description, arguments, drop_default=drop_default, strict=strict)
     return get_kwargs_from_args(args, logger=logger, base_kwargs=base_kwargs, drop_base=drop_base)

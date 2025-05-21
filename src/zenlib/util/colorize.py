@@ -1,4 +1,4 @@
-__version__ = "0.1.1"
+__version__ = "0.2.0"
 
 from enum import Enum
 
@@ -29,5 +29,13 @@ class ANSICode:
 
 
 def colorize(text: str, color="white", bright=False, bold=False) -> str:
-    color_code = Colors[color.upper()].value
+    try:
+        color_code = Colors[color.upper()].value
+    except (KeyError, AttributeError):
+        try:
+            color_code = int(color)
+        except ValueError:
+            raise ValueError(f"Invalid color: {color}")
+        color_code = int(color)
+
     return f"{ANSICode(color_code, bright, bold)}{text}{ANSICode(0)}"

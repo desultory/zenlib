@@ -48,7 +48,7 @@ class TestColorize(TestCase):
 
 
     def test_invalid_color(self):
-        with self.assertRaises(KeyError):
+        with self.assertRaises(ValueError):
             colorize("test", "invalid_color")
 
 

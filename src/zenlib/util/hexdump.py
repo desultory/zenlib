@@ -42,9 +42,10 @@ def get_hex_color(byte: int) -> str:
     return c_(f"{byte:02x}", bold=True)
 
 
-def hexdump(data: bytes, length: int = 16) -> str:
+def hexdump(data: bytes, length: int = 16, binary=False) -> str:
     """
     Returns a formatted hex dump of the given binary data.
+    If `binary` is True, it will return a binary dump instead of hex.
 
     Args:
         data (bytes): The binary data to be dumped.
@@ -54,9 +55,11 @@ def hexdump(data: bytes, length: int = 16) -> str:
         str: A formatted hex dump of the binary data.
     """
     result = []
+    data_len =  length * 3 if not binary else length * 9
     for i in range(0, len(data), length):
         chunk = data[i : i + length]
-        hex_part = " ".join(f"{get_hex_color(byte)}" for byte in chunk)
+        hex_part = " ".join(f"{get_hex_color(byte)}" for byte in chunk) if not binary else " ".join(f"{byte:08b}" for byte in chunk)
+        hex_part = hex_part + " " * (data_len - (len(chunk) * (3 if not binary else 9)))
         ascii_part = "".join((c_(chr(byte), "green") if 32 <= byte < 127 else ".") for byte in chunk)
-        result.append(f"{i:08x}:  {hex_part:<{length * 3}} {ascii_part}")
+        result.append(f"{i:08x}:  {hex_part:<{data_len}} {ascii_part}")
     return "\n".join(result)

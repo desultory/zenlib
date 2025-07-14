@@ -1,5 +1,5 @@
 __author__ = "desultory"
-__version__ = "1.3.0"
+__version__ = "1.3.1"
 
 from logging import Logger, getLogger
 
@@ -25,7 +25,14 @@ class LoggerMixIn:
             # Set the logger's level if _log_level is passed
             self.logger.setLevel(log_level)
         elif log_bump := kwargs.pop("_log_bump", None):
-            self.logger.setLevel(self.logger.parent.level + log_bump)
+            # get the parent logger's level, or the parent's parent logger's level
+            parent_logger = self.logger.parent
+            while parent_logger:
+                if parent_logger.level != 0:
+                    break
+                parent_logger = parent_logger.parent
+
+            self.logger.setLevel(parent_logger.level + log_bump)
 
         # Add a colored stream handler if one does not exist
         add_handler_if_not_exists(self.logger)

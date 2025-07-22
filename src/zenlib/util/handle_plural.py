@@ -1,5 +1,5 @@
 __author__ = "desultory"
-__version__ = "2.2.0"
+__version__ = "2.2.1"
 
 from collections.abc import KeysView, ValuesView
 
@@ -25,6 +25,10 @@ def handle_plural(function, log_level=10):
 
         if isinstance(focus_arg, list) and not isinstance(focus_arg, str):
             log("Expanding list: %s" % focus_arg)
+            for item in focus_arg:
+                function(self, *(other_args + (item,)), **kwargs)
+        elif isinstance(focus_arg, set):
+            log("Expanding set: %s" % focus_arg)
             for item in focus_arg:
                 function(self, *(other_args + (item,)), **kwargs)
         elif isinstance(focus_arg, ValuesView):

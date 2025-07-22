@@ -34,6 +34,16 @@ class TestHandlePlural(TestCase):
         self.assertEqual(self._test_plural_ints_with_kwarg(extra_arg, test_list), None)
         self.assertEqual(self._test_data, sum(test_list))
 
+    def test_set(self):
+        self._test_data = 0
+        test_set = {1, 2, 3, 4}
+        extra_arg = 'a'
+        self.assertEqual(self._test_plural_ints(extra_arg, test_set), None)
+        self.assertEqual(self._test_data, sum(test_set))
+        self._test_data = 0
+        self.assertEqual(self._test_plural_ints_with_kwarg(extra_arg, test_set), None)
+        self.assertEqual(self._test_data, sum(test_set))
+
     def test_setting_kwarg(self):
         self._test_data = 0
         test_list = [1, 2, 3, 4]

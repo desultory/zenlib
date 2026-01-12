@@ -1,6 +1,6 @@
-from multiprocessing import Event, Pipe, Process, Queue
-from os import chroot, chdir, getgid, getuid, setgid, setuid
 from getpass import getuser
+from multiprocessing import Event, Pipe, Process, Queue
+from os import chdir, chroot, getgid, getuid, setgid, setuid
 
 from .namespace import get_id_map, new_id_map, unshare_namespace
 
@@ -18,6 +18,7 @@ class NamespaceProcess(Process):
         self.orig_uid = getuid()
         self.orig_gid = getgid()
         self.uidmapped = Event()
+        self.unshared = Event()
         self.completed = Event()
         self.exception_recv, self.exception_send = Pipe()
         self.function_queue = Queue()
@@ -29,11 +30,15 @@ class NamespaceProcess(Process):
 
     def map_unshare_uids(self):
         self.start()
+
+        self.unshared.wait()
         self.map_ids()
+
         self.uidmapped.set()
 
     def run(self):
         unshare_namespace()
+        self.unshared.set()
         self.uidmapped.wait()
         setuid(0)
         setgid(0)

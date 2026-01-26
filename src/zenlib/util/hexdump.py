@@ -1,4 +1,4 @@
-from .colorize import colorize as c_
+from zenlib.util.colorize import colorize as c_
 
 HEX_COLORS = {
     0: {"dim": True},  # Make null bytes dim

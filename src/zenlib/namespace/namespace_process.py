@@ -2,7 +2,7 @@ from getpass import getuser
 from multiprocessing import Event, Pipe, Process, Queue
 from os import chdir, chroot, getgid, getuid, setgid, setuid
 
-from .namespace import get_id_map, new_id_map, unshare_namespace
+from zenlib.namespace.namespace import get_id_map, new_id_map, unshare_namespace
 
 
 class NamespaceProcess(Process):

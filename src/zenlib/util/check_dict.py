@@ -3,7 +3,7 @@ __version__ = "1.2.2"
 
 
 from functools import wraps
-from .walk_dict import walk_dict
+from zenlib.util.walk_dict import walk_dict
 
 
 def check_dict(key, validate_dict=None, value=None, value_arg=None,

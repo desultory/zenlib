@@ -1,8 +1,8 @@
 __author__ = "desultory"
 __version__ = "3.0.0"
 
-from ..util import merge_class
-from .loggermixin import LoggerMixIn
+from zenlib.util import merge_class
+from zenlib.logging.loggermixin import LoggerMixIn
 
 
 def loggify(cls):

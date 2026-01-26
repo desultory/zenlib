@@ -1,7 +1,7 @@
 __author__ = "desultory"
 __version__ = "3.0.0"
 
-from .loggermixin import LoggerMixIn
+from zenlib.logging.loggermixin import LoggerMixIn
 
 
 class ClassLogger(LoggerMixIn):

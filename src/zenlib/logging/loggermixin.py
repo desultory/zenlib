@@ -3,7 +3,7 @@ __version__ = "1.3.1"
 
 from logging import Logger, getLogger
 
-from .utils import add_handler_if_not_exists, handle_additional_logging, log_init
+from zenlib.logging.utils import add_handler_if_not_exists, handle_additional_logging, log_init
 
 
 class LoggerMixIn:

@@ -1,12 +1,12 @@
-from .colorize import colorize
-from .dict_check import contains, unset
-from .handle_plural import handle_plural
-from .hexdump import hexdump
-from .main_funcs import get_args_n_logger, get_kwargs, get_kwargs_from_args, process_args
-from .merge_class import merge_class
-from .pretty_print import pretty_print
-from .replace_file_line import replace_file_line
-from ..types import NoDupFlatList
+from zenlib.util.colorize import colorize
+from zenlib.util.dict_check import contains, unset
+from zenlib.util.handle_plural import handle_plural
+from zenlib.util.hexdump import hexdump
+from zenlib.util.main_funcs import get_args_n_logger, get_kwargs, get_kwargs_from_args, process_args
+from zenlib.util.merge_class import merge_class
+from zenlib.util.pretty_print import pretty_print
+from zenlib.util.replace_file_line import replace_file_line
+from zenlib.types import NoDupFlatList
 
 __all__ = [
     "handle_plural",

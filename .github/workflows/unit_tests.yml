@@ -34,7 +34,15 @@ jobs:
       run: |
         python -m venv venv
         venv/bin/pip install --upgrade pip
-        venv/bin/pip install .
+
+    - name: run mypy type checks
+      run: |
+        venv/bin/pip install mypy
+        venv/bin/mypy ../zenlib
+
+    - name: Install Zenlib
+      run: venv/bin/pip install .
+
     - name: Run unit tests
       run: |
         venv/bin/python -m unittest discover -v tests

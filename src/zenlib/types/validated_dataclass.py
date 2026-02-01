@@ -1,5 +1,7 @@
 from dataclasses import dataclass
-from typing import ForwardRef, Union, get_args, get_origin, get_type_hints
+from typing import Dict, ForwardRef, Type, TypeVar, Union, cast, get_args, get_origin, get_type_hints
+
+from zenlib.logging.loggify import loggify
 
 
 class ValidatedDataclass:
@@ -11,8 +13,6 @@ class ValidatedDataclass:
         """Ensures the attribute is the correct type"""
         if attribute == "logger":
             return value
-        if value is None:
-            return
 
         expected_type = self.__class__.__annotations__.get(attribute)
         if not expected_type:
@@ -28,10 +28,11 @@ class ValidatedDataclass:
         return value
 
 
-def validatedDataclass(cls):
-    from zenlib.logging import loggify
+C = TypeVar("C", bound=type)
 
-    annotations = {}
+
+def validatedDataclass(cls: C) -> C:
+    annotations: Dict[str, Type] = {}
     for base in cls.__mro__:
         annotations.update(getattr(base, "__annotations__", {}))
 
@@ -40,4 +41,4 @@ def validatedDataclass(cls):
 
     vdc = loggify(dataclass(type(cls.__name__, (ValidatedDataclass, cls), cls_dict)))
 
-    return vdc
+    return cast(C, vdc)

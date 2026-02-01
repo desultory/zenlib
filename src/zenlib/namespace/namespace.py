@@ -1,4 +1,5 @@
-from os import CLONE_NEWNS, CLONE_NEWUSER, unshare, getuid
+# Ignore type checking for os module attributes that may not be available on all platforms
+from os import CLONE_NEWNS, CLONE_NEWUSER, unshare, getuid  # type: ignore[attr-defined]
 from getpass import getuser
 from subprocess import CalledProcessError, run
 

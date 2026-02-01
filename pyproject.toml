@@ -16,6 +16,9 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 
+[options.package_data]
+zenlib = "py.typed"
+
 [project.urls]
 Homepage = "https://github.com/desultory/zenlib"
 Issues = "https://github.com/desultory/zenlib/issues"

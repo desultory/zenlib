@@ -1,6 +1,6 @@
 from zenlib.util.colorize import colorize as c_
 
-HEX_COLORS = {
+HEX_COLORS: dict[int, dict[str, bool | str]] = {
     0: {"dim": True},  # Make null bytes dim
     32: {"dim": True},  # Make space dim
 }

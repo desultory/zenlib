@@ -1,8 +1,9 @@
 from subprocess import CalledProcessError
+from typing import Any
 from .namespace_process import NamespaceProcess
 
 
-def nsexec(target, *args, **kwargs):
+def nsexec(target, *args, **kwargs) -> Any:
     p = NamespaceProcess(target=target, args=args, kwargs=kwargs)
     try:
         p.map_unshare_uids()

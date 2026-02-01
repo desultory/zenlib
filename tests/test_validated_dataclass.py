@@ -1,12 +1,12 @@
 from unittest import TestCase, main
 
-from zenlib.types import validatedDataclass
+from zenlib.types.validated_dataclass import validatedDataclass
 
 
 @validatedDataclass
 class testDataClass:
-    a: int = None
-    b: str = None
+    a: int = 0
+    b: str = ""
 
 
 @validatedDataclass

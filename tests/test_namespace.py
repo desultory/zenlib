@@ -1,4 +1,5 @@
 from platform import system
+from getpass import getuser
 from sys import version_info
 from unittest import TestCase, main, skipIf
 
@@ -12,6 +13,23 @@ def check_test_compat():
 
     if version_info < (3, 12):
         return
+
+    user = getuser()
+
+    with open("/etc/subuid", "r") as f:
+        for subuid_line in f:
+            if subuid_line.startswith(f"{user}:"):
+                break
+        else:
+            return
+
+    with open("/etc/subgid", "r") as f:
+        for subgid_line in f:
+            if subgid_line.startswith(f"{user}:"):
+                break
+        else:
+            return
+
 
     return True
 

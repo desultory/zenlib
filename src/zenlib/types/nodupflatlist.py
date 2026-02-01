@@ -1,6 +1,7 @@
 __author__ = "desultory"
 __version__ = "1.1.1"
 
+from collections.abc import Iterable
 
 from zenlib.logging import ClassLogger
 from zenlib.util import handle_plural
@@ -14,8 +15,6 @@ class NoDupFlatList(ClassLogger, list):
 
     @handle_plural
     def append(self, item):
-        from collections.abc import Iterable
-
         if isinstance(item, Iterable) and not isinstance(item, str):
             self.logger.debug("Adding list items: %s" % item)
             self.append(item)

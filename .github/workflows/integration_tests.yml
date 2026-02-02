@@ -1,0 +1,46 @@
+# This workflow will install Python dependencies, run tests and lint with a variety of Python versions
+# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+
+name: Integration tests
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.11", "3.12", "3.13", "3.14"]
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v3
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Install python deps
+      run: |
+        python -m venv venv
+        venv/bin/pip install --upgrade pip
+
+    - name: Install zenlib
+      run:  venv/bin/pip install .
+
+    - name: Obtain target project
+      run: |
+        mkdir ../projects/pycpio -p
+        git clone https://github.com/desultory/pycpio ../projects/pycpio
+        venv/bin/pip install ../projects/pycpio
+
+    - name: Install pycpio
+      run:  venv/bin/pip install ../projects/pycpio
+
+    - name: Run unit tests
+      run: |
+        venv/bin/python -m unittest discover -v ../projects/pycpio/tests

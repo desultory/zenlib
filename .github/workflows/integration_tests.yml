@@ -32,15 +32,21 @@ jobs:
     - name: Install zenlib
       run:  venv/bin/pip install .
 
-    - name: Obtain target project
+    - name: Run integration tests
+      env:
+        PROJECTS: "desultory/pycpio desultory/prometheus_exporter"
       run: |
-        mkdir ../projects/pycpio -p
-        git clone https://github.com/desultory/pycpio ../projects/pycpio
-        venv/bin/pip install ../projects/pycpio
-
-    - name: Install pycpio
-      run:  venv/bin/pip install ../projects/pycpio
-
-    - name: Run unit tests
-      run: |
-        venv/bin/python -m unittest discover -v ../projects/pycpio/tests
+        workdir=$(pwd)
+        project_dir="$workdir/../projects"
+        mkdir -p $project_dir
+        for repo in $PROJECTS; do
+          project_name=$(echo $repo | cut -d'/' -f2)
+          cd $project_dir
+          echo "Testing project: $project_name"
+          git clone https://github.com/$repo
+          cd $project_name
+          ${workdir}/venv/bin/pip install .
+          ${workdir}/venv/bin/python -m unittest discover -v tests
+          cd $workdir
+          rm -rf "${project_dir}/${project_name}"
+        done

@@ -3,6 +3,9 @@ from zenlib.logging import ColorLognameFormatter, loggify
 from zenlib.types import NoDupFlatList, validatedDataclass
 from zenlib.namespace import nsexec
 
+# Global setting for color logging
+_ZENLIB_COLOR_TEXT = True
+
 __all__ = [
     "colorize",
     "ColorLognameFormatter",
@@ -16,4 +19,5 @@ __all__ = [
     "update_init",
     "walk_dict",
     "check_dict",
+    "_ZENLIB_COLOR_TEXT",
 ]

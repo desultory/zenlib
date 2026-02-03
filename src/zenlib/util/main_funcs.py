@@ -2,12 +2,15 @@
 Functions to help with the main()
 """
 
-__version__ = "1.4.1"
+__version__ = "1.6.0"
 
 from argparse import ArgumentError, ArgumentParser, Namespace
 from importlib.metadata import version
-from logging import FileHandler, Formatter, StreamHandler, getLogger
+from logging import FileHandler, StreamHandler, getLogger
 from sys import argv
+
+import zenlib
+from zenlib.logging.colorlognameformatter import ColorLognameFormatter
 
 
 def get_base_args():
@@ -45,7 +48,6 @@ def get_kwargs_from_args(args, logger=None, base_kwargs={}, drop_base=True):
 
 def process_args(argparser, logger=None, strict=False):
     """Process argparser args, optionally configuring a logger."""
-    from zenlib.logging import ColorLognameFormatter
 
     if strict:
         args = argparser.parse_args()
@@ -76,7 +78,11 @@ def process_args(argparser, logger=None, strict=False):
             format_str += "%(levelname)s | %(name)-42s | %(message)s"
         else:
             format_str += "%(levelname)s | %(message)s"
-        formatter = ColorLognameFormatter(format_str) if not args.no_log_color else Formatter(format_str)
+
+        if args.no_log_color:
+            zenlib._ZENLIB_COLOR_TEXT = False
+
+        formatter = ColorLognameFormatter(format_str)
 
         # Add the formatter to the first handler, or add a new handler
         for handler in logger.handlers:

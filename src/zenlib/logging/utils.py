@@ -15,12 +15,16 @@ def _logger_has_handler(logger):
 
 
 def add_handler_if_not_exists(logger):
-    """Adds a ColorLognameFormatter handler to the logger if it doesn't have a handler already"""
+    """Adds a ColorLognameFormatter handler to the logger if it doesn't have a handler already
+    Coloring is diabled by the _ZENLIB_COLOR_TEXT variable in the colorize function
+    """
     if _logger_has_handler(logger):
         return
-    color_stream_handler = StreamHandler()
-    color_stream_handler.setFormatter(ColorLognameFormatter(fmt="%(levelname)s | %(name)-42s | %(message)s"))
-    logger.addHandler(color_stream_handler)
+    stream_handler = StreamHandler()
+    formatter = ColorLognameFormatter(fmt="%(levelname)s | %(name)-42s | %(message)s")
+    stream_handler.setFormatter(formatter)
+
+    logger.addHandler(stream_handler)
     logger.info("Added default handler to logger: %s", logger)
 
 

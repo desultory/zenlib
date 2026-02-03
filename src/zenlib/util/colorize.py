@@ -1,7 +1,10 @@
-__version__ = "0.3.0"
+__version__ = "0.4.0"
+
 
 from dataclasses import dataclass
 from enum import Enum
+
+import zenlib
 
 ANSI_START = "\x1b["
 
@@ -57,6 +60,9 @@ class ANSICode:
 
 
 def colorize(text: str, color="white", *args, **kwargs) -> str:
+    if not zenlib._ZENLIB_COLOR_TEXT:
+        return text
+
     try:
         color_code = Colors[color.upper()].value
     except (KeyError, AttributeError):

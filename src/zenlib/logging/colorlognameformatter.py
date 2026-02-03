@@ -1,7 +1,9 @@
 __author__ = "desultory"
-__version__ = "3.1.0"
+__version__ = "3.2.0"
 
 from logging import Formatter
+
+from zenlib.util.colorize import colorize
 
 
 class ColorLognameFormatter(Formatter):
@@ -24,7 +26,6 @@ class ColorLognameFormatter(Formatter):
     def format(self, record):
         # When calling format, replace the levelname with a colored version
         # Note: the string size is greatly increased because of the color codes
-        from zenlib.util import colorize
 
         old_levelname = record.levelname
         color_info = self.level_colors.get(record.levelname, {"color": "white"})

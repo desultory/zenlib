@@ -1,7 +1,7 @@
 __author__ = "desultory"
-__version__ = "3.0.0"
+__version__ = "3.0.1"
 
-from zenlib.util import merge_class
+from zenlib.util.merge_class import merge_class
 from zenlib.logging.loggermixin import LoggerMixIn
 
 

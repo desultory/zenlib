@@ -1,8 +1,10 @@
-__version__ = "0.4.0"
+__version__ = "0.5.0"
 
 
 from dataclasses import dataclass
 from enum import Enum
+
+from zenlib.typing.strable import Strable
 
 import zenlib
 
@@ -59,9 +61,9 @@ class ANSICode:
         return f"{ANSI_START}{color_code}m"
 
 
-def colorize(text: str, color="white", *args, **kwargs) -> str:
+def colorize(text: Strable, color="white", *args, **kwargs) -> str:
     if not zenlib._ZENLIB_COLOR_TEXT:
-        return text
+        return str(text)
 
     try:
         color_code = Colors[color.upper()].value

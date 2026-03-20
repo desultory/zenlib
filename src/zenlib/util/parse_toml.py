@@ -9,11 +9,14 @@ if there are parser erorrs, shows the line with the issue and the error message
 turns it into a formatted ValueError instead of a TOMLDecodeError, with the line number and column number highlighted in red, and the error message in yellow
 """
 
+from pathlib import Path
 from tomllib import load, TOMLDecodeError
+from typing import Union
+
 from zenlib.util.colorize import colorize as c_
 
 
-def parse_toml(file_path, allow_missing=False):
+def parse_toml(file_path: Union[Path, str], allow_missing: bool =False) -> dict:
     try:
         with open(file_path, "rb") as f:
             data = load(f)

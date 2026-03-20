@@ -4,6 +4,7 @@ from zenlib.util.handle_plural import handle_plural
 from zenlib.util.hexdump import hexdump
 from zenlib.util.main_funcs import get_args_n_logger, get_kwargs, get_kwargs_from_args, process_args
 from zenlib.util.merge_class import merge_class
+from zenlib.util.parse_toml import parse_toml
 from zenlib.util.pretty_print import pretty_print
 from zenlib.util.replace_file_line import replace_file_line
 from zenlib.types import NoDupFlatList
@@ -13,6 +14,7 @@ __all__ = [
     "colorize",
     "hexdump",
     "NoDupFlatList",
+    "parse_toml",
     "pretty_print",
     "replace_file_line",
     "process_args",

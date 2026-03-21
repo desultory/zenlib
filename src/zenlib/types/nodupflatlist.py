@@ -13,9 +13,9 @@ T = TypeVar("T")
 class NoDupFlatList(ClassLogger, list[T]):
     """List that automatically filters duplicate elements when appended and concatenated."""
 
-    def __init__(self, no_warn=False, *args, **kwargs):
+    def __init__(self, no_warn: bool = False, *args, **kwargs) -> None:
         super().__init__(*args, **kwargs)
-        self.no_warn = no_warn
+        self.no_warn: bool = no_warn
 
     @handle_plural
     def append(self, item: T | Iterable[T]) -> None:
@@ -40,3 +40,9 @@ class NoDupFlatList(ClassLogger, list[T]):
         """
         self.append(item)
         return self
+
+    def copy(self) -> "NoDupFlatList[T]":
+        """Returns a copy of the NoDupFlatList."""
+        new_obj = type(self)(no_warn=self.no_warn, logger=self.logger)
+        new_obj.extend(self)
+        return new_obj

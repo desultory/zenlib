@@ -16,6 +16,11 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 
+[project.optional-dependencies]
+crypto = [
+    "cryptography>=40.0.0",
+]
+
 [options.package_data]
 zenlib = "py.typed"
 

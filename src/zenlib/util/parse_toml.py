@@ -10,13 +10,31 @@ turns it into a formatted ValueError instead of a TOMLDecodeError, with the line
 """
 
 from pathlib import Path
-from tomllib import load, TOMLDecodeError
+from tomllib import TOMLDecodeError, load
 from typing import Union
 
 from zenlib.util.colorize import colorize as c_
 
 
-def parse_toml(file_path: Union[Path, str], allow_missing: bool =False) -> dict:
+def parse_line_number_from_error(e: TOMLDecodeError) -> int:
+    # Try to extract line number from the error message
+    try:
+        return int(str(e).split("(")[1][:-1].split(",")[0].split()[-1])
+    except (IndexError, ValueError):
+        pass
+    return -1
+
+
+def parse_column_number_from_error(e: TOMLDecodeError) -> int:
+    # Try to extract column number from the error message
+    try:
+        return int(str(e).split("(")[1][:-1].split(",")[1].split()[-1])
+    except (IndexError, ValueError):
+        pass
+    return -1
+
+
+def parse_toml(file_path: Union[Path, str], allow_missing: bool = False) -> dict:
     try:
         with open(file_path, "rb") as f:
             data = load(f)
@@ -27,9 +45,10 @@ def parse_toml(file_path: Union[Path, str], allow_missing: bool =False) -> dict:
         else:
             raise
     except TOMLDecodeError as e:
-        line_number = e.lineno
-        column_number = e.colno
-        error_msg = c_(f"[Line {c_(line_number, 'red')} column {c_(column_number, 'red')}] {c_(e.msg, 'yellow')}")
+        line_number = getattr(e, "lineno", parse_line_number_from_error(e))
+        column_number = getattr(e, "colno", parse_column_number_from_error(e))
+        msg = getattr(e, "msg", str(e))
+        error_msg = c_(f"[Line {c_(line_number, 'red')} column {c_(column_number, 'red')}] {c_(msg, 'yellow')}")
         with open(file_path, "r") as f:
             lines = f.readlines()
             error_line = lines[line_number - 1].rstrip() if line_number <= len(lines) else "Line number out of range"

@@ -34,6 +34,7 @@ jobs:
       run: |
         python -m venv venv
         venv/bin/pip install --upgrade pip
+        venv/bin/pip install cryptography
 
     - name: run mypy type checks
       run: |

@@ -6,6 +6,7 @@ from zenlib.types import NoDupFlatList
 class TestNoDupFlatList(TestCase):
     def test_util_import(self):
         from zenlib.util import NoDupFlatList as NDFL
+
         self.assertEqual(NoDupFlatList, NDFL)
 
     def test_dedup1(self):
@@ -46,6 +47,13 @@ class TestNoDupFlatList(TestCase):
         test_list.append([1, 2, 3, [4, 5, 6]])
         test_list += [1, [2, 3], 4, [7, [8, 9]], 6]
         self.assertEqual(test_list, [1, 2, 3, 4, 5, 6, 7, 8, 9])
+
+    def test_intersection(self):
+        list_a = NoDupFlatList(no_warn=True)
+        list_b = NoDupFlatList(no_warn=True)
+        list_a += [1, 2, 3, 4, 5]
+        list_b += [4, 5, 6, 7, 8]
+        self.assertEqual(list_a.intersection(list_b), [4, 5])
 
 
 if __name__ == "__main__":

@@ -1,5 +1,5 @@
 __author__ = "desultory"
-__version__ = "1.3.0"
+__version__ = "1.4.0"
 
 from collections.abc import Iterable
 from typing import Self, TypeVar
@@ -45,4 +45,12 @@ class NoDupFlatList(ClassLogger, list[T]):
         """Returns a copy of the NoDupFlatList."""
         new_obj = type(self)(no_warn=self.no_warn, logger=self.logger)
         new_obj.extend(self)
+        return new_obj
+
+    def intersection(self, other: "NoDupFlatList[T]") -> "NoDupFlatList[T]":
+        """Returns a new NoDupFlatList containing only the elements that are present in both lists."""
+        new_obj = type(self)(no_warn=self.no_warn, logger=self.logger)
+        for item in self:
+            if item in other and item not in new_obj:
+                new_obj.append(item)
         return new_obj

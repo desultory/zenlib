@@ -1,13 +1,11 @@
 from importlib.util import find_spec
-from typing import Callable
 
 # Check if the cryptography library is available
-
-zencrypt: Callable | None
-zendecrypt: Callable | None
-
 if find_spec("cryptography") is None:
-    zencrypt, zendecrypt = None, None
+    def zencrypt(*args, **kwargs):
+        raise ImportError("The 'cryptography' library is required for zencrypt functionality.")
+    def zendecrypt(*args, **kwargs):
+        raise ImportError("The 'cryptography' library is required for zendecrypt functionality.")
 else:
     from zenlib.crypto.zencrypt import zencrypt, zendecrypt
 

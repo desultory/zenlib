@@ -32,7 +32,7 @@ class NoDupFlatList(ClassLogger, list[T]):
             self.logger.warning("List item already exists: %s" % item)
 
     # Ignore type checking for __iadd__ method, we think we know what we're doing
-    def __iadd__(self, item: Iterable[T]) -> Self:  # type: ignore[misc,override]
+    def __iadd__(self, item: Iterable[T] | T) -> Self:  # type: ignore[misc,override]
         """Implements the += operator to add items from an iterable, avoiding duplicates.
         Passes any input to the append method.
 

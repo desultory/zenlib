@@ -12,7 +12,7 @@ class LoggerMixIn:
     if _log_init is set to True, the logger will log the class initialization.
     if _log_level is set, the logger's level will be set to that value.
     If _log_bump is set, the logger's level will be bumped by that amount.
-    Othweise, the log level is not set, and the logger will use the parent's level.
+    Otherwise, the log level is not set, and the logger will use the parent's level.
     """
 
     def init_logger(self, args, kwargs):

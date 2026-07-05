@@ -2,7 +2,7 @@ from collections import UserDict
 from pathlib import Path
 from unittest import TestCase, main
 
-from zenlib.logging import loggify
+from zenlib.logging import LoggerMixIn
 from zenlib.util import contains, unset
 
 TEST_DICT = {"a": [1, 2, 3],
@@ -14,9 +14,9 @@ TEST_DICT = {"a": [1, 2, 3],
              "q": Path("test")}
 
 
-@loggify
-class TestDict(UserDict):
+class TestDict(LoggerMixIn, UserDict):
     def __init__(self, *args, **kwargs):
+        self.init_logger(args, kwargs)
         super().__init__(*args, **kwargs)
         self.data = TEST_DICT
 

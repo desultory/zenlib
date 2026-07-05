@@ -123,7 +123,7 @@ If `fail_safe` is set, returns none when keys can't be found.
 This decorator can be added to a function to check for the presence or lack of a dict item.
 
 > By default, it will print an error message, but will use self.logger if it exists in the class whose method is decorated.
-> This logger will be created automatically if the clsss is wrapped with @loggify.
+> This logger will be created automatically if the class is wrapped with @loggify.
 
 The first arg (`key`) is required. The `validate_dict` arg is initially unset, and allows the dict which is being checked to be changed.
 
@@ -135,10 +135,10 @@ If `key` is a dict, the structure will be used to walk the `validate_dict`.
 * `value_arg` Defines the value to compare found keys against.
 * `contains` Is a boolean that enables checking for the `value_arg` as the name of a key in `validate_dict`.
 * `unset` Is a boolean used to make validation pass if the `key` is not found.
-* `raise_exception` Causes a ValueError to be rasied instead of printing an error message.
+* `raise_exception` Causes a ValueError to be raised instead of printing an error message.
 * `log_level` (10) Defines the log level to send the message to.
 * `return_val` (False) Defines the default return value to use when validation fails.
 * `return_arg` Return this argument (by number) when validation fails.
-* `message` Set the vailidation failure message.
+* `message` Set the validation failure message.
 
 Additional arguments exist to set a value to compare found keys against

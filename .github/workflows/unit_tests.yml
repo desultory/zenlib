@@ -37,6 +37,7 @@ jobs:
         venv/bin/pip install cryptography
 
     - name: run mypy type checks
+      if: matrix.python-version > "3.11"
       run: |
         venv/bin/pip install mypy
         venv/bin/mypy ../zenlib

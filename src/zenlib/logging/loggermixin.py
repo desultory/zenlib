@@ -15,9 +15,10 @@ class LoggerMixIn:
     Otherwise, the log level is not set, and the logger will use the parent's level.
     """
 
-    def init_logger(self, args, kwargs):
+    def init_logger(self, args, kwargs) -> None:
         # Get the parent logger from the root if one was not passed
         parent_logger = kwargs.pop("logger") if isinstance(kwargs.get("logger"), Logger) else getLogger()
+
         # Get a child logger from the parent logger, set self.logger
         self.logger = parent_logger.getChild(self.__class__.__name__)
 
@@ -25,14 +26,8 @@ class LoggerMixIn:
             # Set the logger's level if _log_level is passed
             self.logger.setLevel(log_level)
         elif log_bump := kwargs.pop("_log_bump", None):
-            # get the parent logger's level, or the parent's parent logger's level
-            parent_logger = self.logger.parent
-            while parent_logger:
-                if parent_logger.level != 0:
-                    break
-                parent_logger = parent_logger.parent
-
-            self.logger.setLevel(parent_logger.level + log_bump)
+            # bump the class's logger using the level of the parent logger
+            self.logger.setLevel(parent_logger.getEffectiveLevel() + log_bump)
 
         # Add a colored stream handler if one does not exist
         add_handler_if_not_exists(self.logger)

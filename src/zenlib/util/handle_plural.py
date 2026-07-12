@@ -2,45 +2,46 @@ __author__ = "desultory"
 __version__ = "2.2.1"
 
 from collections.abc import KeysView, ValuesView
+from typing import Any, Callable
 
 
-def handle_plural(function, log_level=10):
+def handle_plural(function: Callable[..., Any], log_level: int = 5) -> Callable[..., Any]:
     """
     Wraps functions to take a list/dict and iterate over it.
     The last passed argument should be the iterable.
     Logs using the logger attribute if it exists.
     """
 
-    def wrapper(self, *args, **kwargs):
-        def log(msg, level=log_level):
+    def wrapper(self: Any, *args: Any, **kwargs: Any) -> Any:
+        def log(msg: str, level: int = log_level):
             if hasattr(self, "logger"):
                 self.logger.log(level, msg)
 
         if len(args) == 1:
             focus_arg = args[0]
-            other_args = tuple()
+            other_args: tuple[Any, ...] = tuple()
         else:
             focus_arg = args[-1]
             other_args = args[:-1]
 
         if isinstance(focus_arg, list) and not isinstance(focus_arg, str):
-            log("Expanding list: %s" % focus_arg)
+            log(f"Expanding list: {focus_arg}")
             for item in focus_arg:
                 function(self, *(other_args + (item,)), **kwargs)
         elif isinstance(focus_arg, set):
-            log("Expanding set: %s" % focus_arg)
+            log(f"Expanding set: {focus_arg}")
             for item in focus_arg:
                 function(self, *(other_args + (item,)), **kwargs)
         elif isinstance(focus_arg, ValuesView):
-            log("Expanding dict values: %s" % focus_arg)
+            log(f"Expanding dict values: {focus_arg}")
             for value in focus_arg:
                 function(self, *(other_args + (value,)), **kwargs)
         elif isinstance(focus_arg, KeysView):
-            log("Expanding dict keys: %s" % focus_arg)
+            log(f"Expanding dict keys: {focus_arg}")
             for key in focus_arg:
                 function(self, *(other_args + (key,)), **kwargs)
         elif isinstance(focus_arg, dict):
-            log("Expanding dict: %s" % focus_arg)
+            log(f"Expanding dict: {focus_arg}")
             for key, value in focus_arg.items():
                 function(
                     self,

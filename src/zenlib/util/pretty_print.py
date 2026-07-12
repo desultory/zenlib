@@ -2,7 +2,7 @@ __author__ = "Desultory"
 __version__ = "1.0.0"
 
 
-def pretty_print(input_data, indent=0, prefix="", print_out=False):
+def pretty_print(input_data, indent=0, prefix="", print_out=False) -> str:
     """
     Formats a complex data structure into a formatted string
     """

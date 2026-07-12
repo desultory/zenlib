@@ -2,23 +2,24 @@ __author__ = "desultory"
 __version__ = "2.2.1"
 
 from collections.abc import KeysView, ValuesView
+from typing import Any, Callable
 
 
-def handle_plural(function, log_level=5):
+def handle_plural(function: Callable[..., Any], log_level: int = 5) -> Callable[..., Any]:
     """
     Wraps functions to take a list/dict and iterate over it.
     The last passed argument should be the iterable.
     Logs using the logger attribute if it exists.
     """
 
-    def wrapper(self, *args, **kwargs):
-        def log(msg, level=log_level):
+    def wrapper(self: Any, *args: Any, **kwargs: Any) -> Any:
+        def log(msg: str, level: int = log_level):
             if hasattr(self, "logger"):
                 self.logger.log(level, msg)
 
         if len(args) == 1:
             focus_arg = args[0]
-            other_args = tuple()
+            other_args: tuple[Any, ...] = tuple()
         else:
             focus_arg = args[-1]
             other_args = args[:-1]

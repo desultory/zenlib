@@ -1,9 +1,9 @@
 __author__ = "desultory"
-__version__ = "1.3.1"
+__version__ = "1.4.0"
 
 from logging import Logger, getLogger
 
-from zenlib.logging.utils import add_handler_if_not_exists, handle_additional_logging, log_init
+from zenlib.logging.utils import add_handler_if_not_exists, log_init
 
 
 class LoggerMixIn:
@@ -39,6 +39,3 @@ class LoggerMixIn:
 
         # Log class init if _log_init is passed
         log_init(self, args, kwargs)
-
-        # Add logging to _log_setattr if set
-        handle_additional_logging(self, kwargs)

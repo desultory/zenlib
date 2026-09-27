@@ -1,11 +1,11 @@
 """
 Toml file reader helper
 
-uses tomllib.load to read the file and return the data as a dict
+Uses tomllib.load to read the file and return the data as a dict
 
-has an "allow_missing" arg to return an empty dict if the file is missing
+Has an "allow_missing" arg to return an empty dict if the file is missing
 
-if there are parser erorrs, shows the line with the issue and the error message
+If there are parser errors, shows the line with the issue and the error message
 turns it into a formatted ValueError instead of a TOMLDecodeError, with the line number and column number highlighted in red, and the error message in yellow
 """
 

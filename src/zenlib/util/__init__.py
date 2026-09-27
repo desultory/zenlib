@@ -1,4 +1,5 @@
 from zenlib.util.colorize import colorize
+from zenlib.util.dataclass_config import DataclassConfigMixIn
 from zenlib.util.dict_check import contains, unset
 from zenlib.util.handle_plural import handle_plural
 from zenlib.util.hexdump import hexdump
@@ -24,4 +25,5 @@ __all__ = [
     "contains",
     "unset",
     "merge_class",
+    "DataclassConfigMixIn",
 ]
